@@ -31,10 +31,16 @@ Manualne tworzenie wysokiej jakości fiszek jest czasochłonne i żmudne, co zni
 - Usuwanie pojedynczych fiszek.
 - Edycja inline z walidacją (przód/tył do 1000 znaków).
 
+- Usuniecie jest trwale (brak kosza/undo w MVP).
+- Edycja inline dotyczy wszystkich zapisanych fiszek (zarowno AI, jak i recznych).
+
 3.4. Uwierzytelnianie i konta użytkowników
-- Rejestracja/logowanie 
+- Rejestracja/logowanie
 - Zmiana hasła i usunięcie konta przez użytkownika wraz z przypisanymi do niego fiszkami.
 - Minimalny zakres danych: e-mail + hasło.
+
+- Wylogowanie użytkownika.
+- Izolacja danych: użytkownik może wyświetlać, edytować i usuwać wyłącznie własne fiszki (brak współdzielenia w MVP).
 
 3.5. Nauka i powtórki
 - Dedykowana strona sesji nauki: prezentacja porcji 5 fiszek na raz.
@@ -48,7 +54,10 @@ Manualne tworzenie wysokiej jakości fiszek jest czasochłonne i żmudne, co zni
 3.7. Analityka i logowanie zdarzeń
 - Dla każdego generowania: zapis liczby propozycji, liczby akceptacji i procentu akceptacji.
 -Brak przechowywania propozycji odrzuconych ani surowych danych wprowadzonych do generatora poza kontekstem operacyjnym.
- 
+
+- Zapis znacznika czasu (timestamp) dla każdej sesji generowania.
+- Zapis atrybutu pochodzenia (origin: AI-full/AI-edited/manual) przy zapisanej fiszce, aby umożliwić raportowanie udziału fiszek AI vs ręczne.
+
 3.8. Walidacje i ograniczenia
 - Wejście do generatora: 100–10000 znaków.
 - Limit 20 wygenerowanych propozycji na jedną operację generowania.
@@ -149,10 +158,11 @@ Kryteria akceptacji:
 - Zapis zmian bez przeładowania strony.
 
 ID: US-010
-Tytuł: Brak edycji fiszek AI
-Opis: Jako użytkownik potrafie rozróżnić fiszki wygenerowane przez AI od fiszki ręcznie dodanej.
+Tytuł: Oznaczanie pochodzenia fiszki (AI vs ręczna)
+Opis: Jako użytkownik chcę rozróżnić fiszki wygenerowane przez AI od fiszek ręcznie dodanych, aby lepiej zarządzać swoim zestawem.
 Kryteria akceptacji:
-- Ikona/etykieta wskazująca, że fiszka pochodzi z AI lub jest ręcznie dodana.
+- Ikona/etykieta wskazująca pochodzenie (AI lub ręczna).
+- Fiszki mogą być edytowane niezależnie od pochodzenia (zgodnie z 3.3).
 
 ID: US-011
 Tytuł: Wyszukiwanie fiszek

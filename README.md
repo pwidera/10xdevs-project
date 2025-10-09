@@ -1,94 +1,121 @@
-# 10x Astro Starter
+# 10xFlashAI
 
-A modern, opinionated starter template for building fast, accessible, and AI-friendly web applications.
+[![version](https://img.shields.io/badge/version-0.0.1-blue)](./package.json) [![node](https://img.shields.io/badge/node-22.14.0-339933?logo=node.js&logoColor=white)](./.nvmrc)
 
-## Tech Stack
+## Table of Contents
+- [1. Project name](#1-project-name)
+- [2. Project description](#2-project-description)
+- [3. Tech stack](#3-tech-stack)
+- [4. Getting started locally](#4-getting-started-locally)
+- [5. Available scripts](#5-available-scripts)
+- [6. Project scope](#6-project-scope)
+- [7. Project status](#7-project-status)
+- [8. License](#8-license)
 
-- [Astro](https://astro.build/) v5.5.5 - Modern web framework for building fast, content-focused websites
-- [React](https://react.dev/) v19.0.0 - UI library for building interactive components
-- [TypeScript](https://www.typescriptlang.org/) v5 - Type-safe JavaScript
-- [Tailwind CSS](https://tailwindcss.com/) v4.0.17 - Utility-first CSS framework
+## 1. Project name
+10xFlashAI
 
-## Prerequisites
+## 2. Project description
+10xFlashAIs is an AI-assisted flashcards app that helps you rapidly create and study high‑quality Q&A cards.
 
-- Node.js v22.14.0 (as specified in `.nvmrc`)
-- npm (comes with Node.js)
+Core capabilities (MVP):
+- Generate up to 20 Q&A flashcard proposals from a pasted text (100–10,000 chars), in Polish or English. Accept or reject individually, or use bulk accept/reject. Only accepted cards are saved.
+- Manually add flashcards with validation (front/back up to 1000 chars), edit saved cards inline, search by front and back, and delete cards.
+- User accounts with registration, login, password change, and account deletion (with associated cards), ensuring per‑user privacy.
+- Simple study sessions: review 5 cards at a time, click to reveal the answer, navigate previous/next. Minimal spaced‑repetition fields (e.g., last_reviewed_at) guide scheduling, prioritizing the oldest reviewed items.
+- Analytics: record number of generated proposals, number of acceptances, and acceptance rate per generation session.
 
-## Getting Started
+References:
+- Product Requirements: .ai/prd.md
+- Tech Stack: .ai/tech-stack.md
 
-1. Clone the repository:
+## 3. Tech stack
+- Frontend: Astro 5 + React 19, TypeScript 5, Tailwind CSS 4, shadcn/ui
+- Backend: Supabase (PostgreSQL, Auth, SDKs)
+- AI: OpenRouter.ai (access to multiple LLM providers with budgeting controls)
+- CI/CD & Hosting: GitHub Actions; DigitalOcean via Docker
 
+Key runtime dependencies (see package.json for full list):
+- astro ^5.13.7, @astrojs/react, @astrojs/node, @astrojs/sitemap
+- react ^19.1.1, react-dom ^19.1.1, @types/react, @types/react-dom
+- tailwindcss ^4.1.13, @tailwindcss/vite, tailwind-merge, class-variance-authority, clsx
+- lucide-react, @radix-ui/react-slot, tw-animate-css
+
+Tooling:
+- ESLint 9, Prettier (+ prettier-plugin-astro), TypeScript ESLint 8, eslint-plugin-astro, eslint-plugin-react(+hooks+compiler beta), import resolver
+- Husky + lint-staged
+
+## 4. Getting started locally
+Prerequisites:
+- Node.js 22.14.0 (see .nvmrc)
+- npm (bundled with Node.js)
+
+Setup:
+1) Use the correct Node version
 ```bash
-git clone https://github.com/przeprogramowani/10x-astro-starter.git
-cd 10x-astro-starter
+nvm use
 ```
-
-2. Install dependencies:
-
+2) Install dependencies
 ```bash
 npm install
 ```
+3) Configure environment variables (create .env or .env.local)
+```bash
+# OpenRouter (LLM access)
+OPENROUTER_API_KEY=your_openrouter_api_key
 
-3. Run the development server:
-
+# Supabase (Backend)
+SUPABASE_URL=your_supabase_project_url
+SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+4) Start the dev server
 ```bash
 npm run dev
 ```
-
-4. Build for production:
-
+5) Build and preview production
 ```bash
 npm run build
+npm run preview
 ```
 
-## Available Scripts
+## 5. Available scripts
+- dev: Start the Astro dev server
+- build: Build the production site
+- preview: Preview the production build locally
+- astro: Run the Astro CLI directly
+- lint: Run ESLint
+- lint:fix: Run ESLint with auto-fix
+- format: Run Prettier write across the repo
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
-- `npm run lint:fix` - Fix ESLint issues
+## 6. Project scope
+In scope (MVP):
+- AI generation from pasted text (100–10,000 chars), up to 20 Q&A proposals, accept/reject individually and in bulk; only accepted saved
+- Manual flashcard creation (Q&A up to 1000 chars), validation; inline edit saved cards
+- List, search (front and back), and delete cards
+- Authentication: register, login, change password, delete account; minimal data: email + password; secure per‑user access
+- Learning sessions: 5 cards per page, reveal back on click, previous/next navigation; minimal spaced‑repetition fields (e.g., last_reviewed_at); selection by oldest reviewed first
+- Analytics: proposals count, acceptances, acceptance rate per generation session; no storage of rejected proposals or raw input beyond operational context
 
-## Project Structure
+Out of scope (for MVP):
+- Advanced spaced‑repetition algorithms (e.g., full SM‑2 with ratings)
+- Importing documents (PDF, DOCX, etc.)
+- Sharing sets and external education platform integrations
+- Mobile apps
+- Automatic language detection
+- Autosave/restore of AI proposals; resilience to refresh/network loss for proposals (proposals are ephemeral)
+- Extended legal/content policies beyond basics
 
-```md
-.
-├── src/
-│   ├── layouts/    # Astro layouts
-│   ├── pages/      # Astro pages
-│   │   └── api/    # API endpoints
-│   ├── components/ # UI components (Astro & React)
-│   └── assets/     # Static assets
-├── public/         # Public assets
-```
+## 7. Project status
+- Version: 0.0.1
+- Status: MVP in progress / early development
+- Success metrics (high-level goals):
+  - ≥75% acceptance rate of AI‑generated proposals per generation session
+  - ≥75% of newly created cards should originate from AI (over a given period)
+  - Adoption of generation feature (sessions with ≥1 accepted card)
 
-## AI Development Support
+Additional docs:
+- Product Requirements: .ai/prd.md
+- Tech Stack: .ai/tech-stack.md
 
-This project is configured with AI development tools to enhance the development experience, providing guidelines for:
-
-- Project structure
-- Coding practices
-- Frontend development
-- Styling with Tailwind
-- Accessibility best practices
-- Astro and React guidelines
-
-### Cursor IDE
-
-The project includes AI rules in `.cursor/rules/` directory that help Cursor IDE understand the project structure and provide better code suggestions.
-
-### GitHub Copilot
-
-AI instructions for GitHub Copilot are available in `.github/copilot-instructions.md`
-
-### Windsurf
-
-The `.windsurfrules` file contains AI configuration for Windsurf.
-
-## Contributing
-
-Please follow the AI guidelines and coding practices defined in the AI configuration files when contributing to this project.
-
-## License
-
-MIT
+## 8. License
+No license specified yet. Until a LICENSE file is added, all rights are reserved.

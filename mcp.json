@@ -1,0 +1,17 @@
+{
+  "servers": {
+    "10x-mvp-tracker": {
+      "command": "npx",
+      "args": ["@przeprogramowani/10x-mvp-tracker"],
+      "transport": "stdio"
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    },
+    "selenium": {
+      "command": "npx",
+      "args": ["-y", "@angiejones/mcp-selenium"]
+    }
+  }
+}
