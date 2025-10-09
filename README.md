@@ -24,6 +24,7 @@ Core capabilities (MVP):
 - User accounts with registration, login, password change, and account deletion (with associated cards), ensuring per‑user privacy.
 - Simple study sessions: review 5 cards at a time, click to reveal the answer, navigate previous/next. Minimal spaced‑repetition fields (e.g., last_reviewed_at) guide scheduling, prioritizing the oldest reviewed items.
 - Analytics: record number of generated proposals, number of acceptances, and acceptance rate per generation session.
+- Indicate card origin (AI vs manual) with a label/icon; store origin (AI-full / AI-edited / manual) for analytics.
 
 References:
 - Product Requirements: .ai/prd.md
@@ -92,6 +93,7 @@ In scope (MVP):
 - AI generation from pasted text (100–10,000 chars), up to 20 Q&A proposals, accept/reject individually and in bulk; only accepted saved
 - Manual flashcard creation (Q&A up to 1000 chars), validation; inline edit saved cards
 - List, search (front and back), and delete cards
+- Deletion is permanent (no trash/undo in MVP).
 - Authentication: register, login, change password, delete account; minimal data: email + password; secure per‑user access
 - Learning sessions: 5 cards per page, reveal back on click, previous/next navigation; minimal spaced‑repetition fields (e.g., last_reviewed_at); selection by oldest reviewed first
 - Analytics: proposals count, acceptances, acceptance rate per generation session; no storage of rejected proposals or raw input beyond operational context

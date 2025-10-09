@@ -1,7 +1,7 @@
-# Dokument wymagań produktu (PRD) - 10xCards
+# Dokument wymagań produktu (PRD) - 10xFlashAI
 
 ## 1. Przegląd produktu
-Projekt FlashAI ma na celu umożliwienie użytkownikom szybkiego tworzenia i zarządzania zestawami fiszek edukacyjnych. Aplikacja wykorzystuje modele LLM (poprzez API) do generowania sugestii fiszek na podstawie dostarczonego tekstu.
+Projekt 10xFlashAI ma na celu umożliwienie użytkownikom szybkiego tworzenia i zarządzania zestawami fiszek edukacyjnych. Aplikacja wykorzystuje modele LLM (poprzez API) do generowania sugestii fiszek na podstawie dostarczonego tekstu.
 
 ## 2. Problem użytkownika
 Manualne tworzenie wysokiej jakości fiszek jest czasochłonne i żmudne, co zniechęca do stosowania efektywnej metody nauki opartej na powtórkach. Użytkownicy potrzebują narzędzia, które:
