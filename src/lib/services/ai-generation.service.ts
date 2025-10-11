@@ -100,7 +100,7 @@ type GenerateFlashcardsResult = {
 export class AIGenerationService {
   private readonly apiKey: string;
   private readonly apiUrl = 'https://openrouter.ai/api/v1/chat/completions';
-  private readonly model = 'anthropic/claude-3-haiku'; // Fast and cost-effective
+  private readonly model = 'openai/gpt-4o-mini'; // Fast and cost-effective
   private readonly timeout = 30000; // 30 seconds
   private readonly temperature = 0.7;
   private readonly maxTokens = 4000;
