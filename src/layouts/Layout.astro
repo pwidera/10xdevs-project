@@ -18,8 +18,45 @@ const { title = "10x Astro Starter" } = Astro.props;
     <title>{title}</title>
   </head>
   <body>
-    <slot />
+    <header class="border-b">
+      <div class="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
+        <a href="/" class="font-semibold">10xFlashAI</a>
+        <nav class="flex items-center gap-3">
+          {Astro.locals?.user ? (
+            <>
+              <a href="/auth/change-password" class="text-sm">Zmień hasło</a>
+              <a href="/auth/delete-account" class="text-sm">Usuń konto</a>
+              <a href="#" id="logout-link" class="text-sm">Wyloguj</a>
+            </>
+          ) : (
+            <>
+              <a href="/auth/login" class="text-sm">Zaloguj</a>
+              <a href="/auth/register" class="text-sm">Zarejestruj</a>
+            </>
+          )}
+        </nav>
+      </div>
+    </header>
+    <main>
+      <slot />
+    </main>
   </body>
+    <script>
+      const link = document.getElementById('logout-link');
+      if (link) {
+        link.addEventListener('click', async (e) => {
+          e.preventDefault();
+          try {
+            const res = await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' });
+            if (res.ok) {
+              // redirect to home
+              window.location.assign('/');
+            }
+          } catch {}
+        });
+      }
+    </script>
+
 </html>
 
 <style>

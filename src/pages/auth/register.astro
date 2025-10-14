@@ -1,0 +1,13 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { RegisterForm } from '@/components/auth/RegisterForm';
+
+export const prerender = false;
+---
+
+<Layout title="Rejestracja">
+  <main class="container mx-auto px-4 py-10">
+    <RegisterForm client:load />
+  </main>
+</Layout>
+
