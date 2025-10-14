@@ -111,8 +111,9 @@ ID: US-003B
 Tytuł: Odzyskiwanie hasła
 Opis: Jako użytkownik chcę mieć możliwość odyzskiwania hasła.
 Kryteria akceptacji:
-- Użytkownikowi zostanie nadane nowe hasło
-- Nowe hasło zostanie wysłane na e-mail
+- Użytkownik otrzymuje na e-mail link do resetu hasła
+- Link prowadzi do strony ustawienia nowego hasła; po zmianie logowanie nowym hasłem działa poprawnie
+- Komunikat po wysłaniu jest neutralny (zawsze 200), bez ujawniania istnienia konta
 
 ID: US-004
 Tytuł: Usunięcie konta
