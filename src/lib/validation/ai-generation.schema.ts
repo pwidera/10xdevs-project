@@ -37,3 +37,45 @@ export const GenerateFlashcardsSchema = z.object({
  */
 export type GenerateFlashcardsInput = z.infer<typeof GenerateFlashcardsSchema>;
 
+/**
+ * Schema for validating individual flashcard proposal
+ *
+ * Validation rules:
+ * - front_text: 1-1000 characters (trimmed)
+ * - back_text: 1-1000 characters (trimmed)
+ */
+export const FlashcardProposalSchema = z.object({
+  front_text: z
+    .string()
+    .trim()
+    .min(1, 'front_text must not be empty')
+    .max(1000, 'front_text must not exceed 1000 characters'),
+  back_text: z
+    .string()
+    .trim()
+    .min(1, 'back_text must not be empty')
+    .max(1000, 'back_text must not exceed 1000 characters'),
+});
+
+/**
+ * Schema for validating accept proposals request
+ *
+ * Validation rules:
+ * - generation_session_id: must be a valid UUID
+ * - cards: array of 1-20 flashcard proposals
+ */
+export const AcceptProposalsSchema = z.object({
+  generation_session_id: z
+    .string()
+    .uuid('generation_session_id must be a valid UUID'),
+  cards: z
+    .array(FlashcardProposalSchema)
+    .min(1, 'cards must contain at least 1 item')
+    .max(20, 'cards must not exceed 20 items'),
+});
+
+/**
+ * Inferred TypeScript type from the schema
+ */
+export type AcceptProposalsInput = z.infer<typeof AcceptProposalsSchema>;
+
