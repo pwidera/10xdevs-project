@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 interface Props {
   title?: string;
@@ -16,6 +17,15 @@ const { title = "10x Astro Starter" } = Astro.props;
     <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <!-- Initialize theme before page renders to prevent flash -->
+    <script is:inline>
+      const savedTheme = localStorage.getItem("theme");
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+      if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+        document.documentElement.classList.add("dark");
+      }
+    </script>
   </head>
   <body>
     <header class="border-b">
@@ -24,6 +34,7 @@ const { title = "10x Astro Starter" } = Astro.props;
         <nav class="flex items-center gap-3">
           {Astro.locals?.user ? (
             <>
+              <span class="text-sm text-muted-foreground">{Astro.locals.user.email}</span>
               <a href="/auth/change-password" class="text-sm">Zmień hasło</a>
               <a href="/auth/delete-account" class="text-sm">Usuń konto</a>
               <a href="#" id="logout-link" class="text-sm">Wyloguj</a>
@@ -34,6 +45,7 @@ const { title = "10x Astro Starter" } = Astro.props;
               <a href="/auth/register" class="text-sm">Zarejestruj</a>
             </>
           )}
+          <ThemeToggle client:load />
         </nav>
       </div>
     </header>

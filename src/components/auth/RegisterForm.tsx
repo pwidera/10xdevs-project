@@ -35,7 +35,11 @@ export function RegisterForm() {
     if (!validate()) return;
     setLoading(true);
     try {
-      const res = await post<{ redirect?: string }>('/api/auth/register', { email: values.email, password: values.password });
+      const res = await post<{ redirect?: string }>('/api/auth/register', {
+        email: values.email,
+        password: values.password,
+        confirmPassword: values.confirmPassword
+      });
       if (res.ok) {
         const to = (res.redirect as string) || '/app/generate';
         window.location.assign(to);

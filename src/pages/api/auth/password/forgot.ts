@@ -23,7 +23,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const supabase = createSupabaseServerClient({ headers: request.headers, cookies });
 
     const base = import.meta.env.APP_BASE_URL as string | undefined;
-    const redirectTo = base ? `${base}/auth/change-password` : undefined;
+    const redirectTo = base ? `${base}/auth/reset-password` : undefined;
     const { error } = await supabase.auth.resetPasswordForEmail(email, redirectTo ? { redirectTo } : undefined);
     if (error) {
       // Do not leak information; return neutral 200

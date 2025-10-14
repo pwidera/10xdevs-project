@@ -1,17 +1,17 @@
 <div
-  class="relative w-full mx-auto min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 p-4 sm:p-8"
+  class="relative w-full mx-auto min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 p-4 sm:p-8 transition-colors duration-300"
 >
   <div
-    class="relative max-w-4xl mx-auto backdrop-blur-xl bg-gradient-to-b from-white/10 to-white/5 rounded-2xl shadow-2xl p-8 text-white border border-white/10"
+    class="relative max-w-4xl mx-auto backdrop-blur-xl bg-gradient-to-b from-white/10 to-white/5 dark:from-white/5 dark:to-white/2 rounded-2xl shadow-2xl p-8 text-white border border-white/10 dark:border-white/5"
   >
     <div class="space-y-8">
       <div class="text-center">
         <h1
-          class="text-6xl font-bold mb-4 bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 text-transparent bg-clip-text drop-shadow-lg"
+          class="text-6xl font-bold mb-4 bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 dark:from-blue-300 dark:via-purple-300 dark:to-pink-300 text-transparent bg-clip-text drop-shadow-lg"
         >
           Witaj w 10xFlashAI
         </h1>
-        <p class="text-xl text-blue-100 mt-12">
+        <p class="text-xl text-blue-100 dark:text-blue-200 mt-12">
           Zaloguj się aby uzyskać dostęp do systemu
         </p>
       </div>
@@ -19,3 +19,15 @@
     </div>
   </div>
 </div>
+
+<script>
+  // Initialize theme on page load
+  const savedTheme = localStorage.getItem("theme");
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
+</script>
