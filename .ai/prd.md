@@ -107,6 +107,13 @@ Kryteria akceptacji:
 - Walidacja minimalnej długości i zgodności pól hasła.
 - Po zmianie hasła logowanie nowym hasłem działa poprawnie.
 
+ID: US-003B
+Tytuł: Odzyskiwanie hasła
+Opis: Jako użytkownik chcę mieć możliwość odyzskiwania hasła.
+Kryteria akceptacji:
+- Użytkownikowi zostanie nadane nowe hasło
+- Nowe hasło zostanie wysłane na e-mail
+
 ID: US-004
 Tytuł: Usunięcie konta
 Opis: Jako użytkownik chcę usunąć swoje konto, aby moja obecność i dane zostały skasowane.
@@ -114,6 +121,7 @@ Kryteria akceptacji:
 - Akcja usunięcia konta z potwierdzeniem.
 - Usunięte zostają dane użytkownika i powiązane fiszki.
 - Użytkownik zostaje wylogowany i widzi potwierdzenie usunięcia.
+
 
 ID: US-005
 Tytuł: Wprowadzenie tekstu do generatora
