@@ -103,11 +103,6 @@ export const POST: APIRoute = async (context) => {
 
   let userId: string;
 
-  // TODO: TEMPORARY - Authentication disabled for testing
-  // Remove this and uncomment the code below when ready for production
-  userId = 'test-user-id';
-
-  /* PRODUCTION CODE - Uncomment when ready:
   try {
     const { data: { user }, error } = await context.locals.supabase.auth.getUser();
 
@@ -138,7 +133,6 @@ export const POST: APIRoute = async (context) => {
       }
     );
   }
-  */
 
   // ============================================================================
   // STEP 3: Generate flashcard proposals using AI
@@ -215,19 +209,6 @@ export const POST: APIRoute = async (context) => {
   // STEP 4: Save generation session to database
   // ============================================================================
 
-  // TODO: TEMPORARY - Using mock generation session for testing
-  // Remove this and uncomment the code below when ready for production
-  const generationSession = {
-    id: 'test-session-' + Date.now(),
-    user_id: userId,
-    proposals_count: generationResult.proposals.length,
-    source_text_length: validatedData.source_text.length,
-    source_text_hash: generationResult.sourceTextHash,
-    generate_duration: generationResult.duration,
-    created_at: new Date().toISOString()
-  };
-
-  /* PRODUCTION CODE - odkomenuj zapis generowanej sesji do bazy
   const sessionService = createGenerationSessionService(context.locals.supabase);
 
   let generationSession;
@@ -257,7 +238,6 @@ export const POST: APIRoute = async (context) => {
       }
     );
   }
-  */
 
 
   // ============================================================================

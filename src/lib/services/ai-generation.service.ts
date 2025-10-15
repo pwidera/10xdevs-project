@@ -317,10 +317,10 @@ Remember: Return ONLY the JSON array, no markdown formatting or additional text.
   }
 
   /**
-   * Compute MD5 hash of source text
+   * Compute SHA-256 hash of source text
    */
   private computeSourceTextHash(text: string): string {
-    return crypto.createHash('md5').update(text).digest('hex');
+    return crypto.createHash('sha256').update(text).digest('hex');
   }
 }
 
