@@ -38,3 +38,11 @@ CI/CD i Hosting:
 
 \- DigitalOcean do hostowania aplikacji za pośrednictwem obrazu docker
 
+
+
+
+Testowanie (wg planu testów):
+
+- Jednostkowe/komponentowe/integracyjne: Vitest, @testing-library/react, @testing-library/user-event, MSW, supertest
+
+- E2E: Playwright (+ @axe-core/playwright do dostępności)

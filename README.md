@@ -46,6 +46,11 @@ Tooling:
 - ESLint 9, Prettier (+ prettier-plugin-astro), TypeScript ESLint 8, eslint-plugin-astro, eslint-plugin-react(+hooks+compiler beta), import resolver
 - Husky + lint-staged
 
+
+Testing (planned):
+- Unit/Component/Integration: Vitest, @testing-library/react, @testing-library/user-event, MSW, supertest
+- E2E: Playwright (+ @axe-core/playwright for accessibility)
+
 ## 4. Getting started locally
 Prerequisites:
 - Node.js 22.14.0 (see .nvmrc)
