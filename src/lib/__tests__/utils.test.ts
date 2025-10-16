@@ -113,7 +113,7 @@ describe('cn (className utility)', () => {
     });
 
     it('resolves conflicts in conditional classes', () => {
-      const variant = 'primary';
+      const variant = 'primary' as 'primary' | 'secondary';
       const result = cn(
         'bg-gray-500',
         variant === 'primary' && 'bg-blue-500',
@@ -166,8 +166,8 @@ describe('cn (className utility)', () => {
     it('handles deeply nested conditionals', () => {
       const isActive = true;
       const isDisabled = false;
-      const variant = 'primary';
-      
+      const variant = 'primary' as 'primary' | 'secondary';
+
       const result = cn(
         'base-class',
         isActive && 'active',

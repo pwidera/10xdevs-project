@@ -89,6 +89,9 @@ npm run preview
 - build: Build the production site
 - preview: Preview the production build locally
 - astro: Run the Astro CLI directly
+- test: Run unit tests with Vitest
+- test:ui: Run tests with Vitest UI
+- test:e2e: Run end-to-end tests with Playwright
 - lint: Run ESLint
 - lint:fix: Run ESLint with auto-fix
 - format: Run Prettier write across the repo
@@ -123,6 +126,8 @@ Out of scope (for MVP):
 Additional docs:
 - Product Requirements: .ai/prd.md
 - Tech Stack: .ai/tech-stack.md
+- API Documentation:
+  - [Flashcards API](docs/api/flashcards.md)
 
 ## 8. License
 No license specified yet. Until a LICENSE file is added, all rights are reserved.

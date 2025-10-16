@@ -23,7 +23,7 @@ export const onRequest = defineMiddleware(async ({ locals, cookies, url, request
   locals.supabase = supabase as any;
 
   const { data: { user } } = await supabase.auth.getUser();
-  locals.user = user ? { id: user.id, email: user.email } : null;
+  locals.user = user ? { id: user.id, email: user.email || null } : null;
 
   if (PUBLIC_PATHS.has(url.pathname)) {
     return next();
