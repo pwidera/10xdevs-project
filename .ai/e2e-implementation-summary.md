@@ -1,11 +1,13 @@
 # E2E Tests - Podsumowanie implementacji
 
-## ✅ Status: ZAIMPLEMENTOWANE
+## ✅ Status: ZAIMPLEMENTOWANE (zaktualizowane o krok 8)
 
-Testy E2E dla scenariusza generowania i zatwierdzania fiszek zostały w pełni zaimplementowane zgodnie z:
-- Scenariuszem testowym: `.ai/e2e-test-scenario.md`
+Testy E2E dla scenariusza generowania i zatwierdzania fiszek (8 kroków) zostały w pełni zaimplementowane zgodnie z:
+- Scenariuszem testowym: `.ai/e2e-test-scenario.md` (8 kroków)
 - Wytycznymi Playwright: `.augment/rules/imported/playwright-testing.md`
 - Best practices: Page Object Model, AAA pattern, fixtures
+
+**Nowy krok 8:** Usuwanie konta użytkownika i weryfikacja usunięcia.
 
 ---
 
@@ -13,11 +15,12 @@ Testy E2E dla scenariusza generowania i zatwierdzania fiszek zostały w pełni z
 
 ### Testy
 - **`e2e/flashcards-generation.spec.ts`** - Główny test E2E
-  - ✅ Scenariusz 1: Pełny flow (rejestracja → generowanie → zatwierdzanie → weryfikacja)
+  - ✅ Scenariusz 1: Pełny flow (rejestracja → generowanie → zatwierdzanie → weryfikacja → usunięcie konta)
   - ✅ Scenariusz 2: Indywidualne zatwierdzanie propozycji
   - ✅ Używa AAA pattern (Arrange, Act, Assert)
   - ✅ Używa `test.step()` dla czytelności
   - ✅ Izolacja testów przez `beforeEach`
+  - ✅ **NOWE:** Krok 8 - usuwanie konta i weryfikacja
 
 - **`e2e/smoke.spec.ts`** - Podstawowy test smoke (istniejący)
 
@@ -29,6 +32,11 @@ Testy E2E dla scenariusza generowania i zatwierdzania fiszek zostały w pełni z
   - `login(email, password)` - logowanie użytkownika
   - `waitForRegisterSuccess()` - czekanie na sukces rejestracji
   - `generateTestEmail()` - generowanie unikalnych emaili testowych
+  - **NOWE:** `gotoDeleteAccount()` - nawigacja do strony usuwania konta
+  - **NOWE:** `clickDeleteAccountLink()` - kliknięcie linku w top barze
+  - **NOWE:** `deleteAccount(confirmation)` - usunięcie konta
+  - **NOWE:** `waitForDeleteSuccess(url)` - czekanie na przekierowanie po usunięciu
+  - **NOWE:** `expectLoginFailure(email, password)` - weryfikacja nieudanego logowania
 
 - **`e2e/page-objects/generate.page.ts`** - Generowanie fiszek
   - `goto()` - nawigacja do strony generowania

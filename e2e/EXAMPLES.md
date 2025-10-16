@@ -11,6 +11,7 @@ Ten plik zawiera przykłady użycia Page Objects i wzorców testowych.
 - [Test z asercjami](#test-z-asercjami)
 - [Test z retry](#test-z-retry)
 - [Test z tagami](#test-z-tagami)
+- [Test usuwania konta](#test-usuwania-konta)
 
 ---
 
@@ -360,6 +361,56 @@ test('generate with mocked API', async ({ generatePage }) => {
   expect(count).toBe(5);
 });
 ```
+
+---
+
+## Test usuwania konta
+
+```typescript
+import { test, expect } from './fixtures';
+import { TEST_CREDENTIALS } from './test-data';
+
+test('user can delete their account', async ({ authPage }) => {
+  // Arrange - Register user
+  const email = AuthPage.generateTestEmail();
+  await authPage.gotoRegister();
+  await authPage.register(email, TEST_CREDENTIALS.password);
+  await authPage.waitForRegisterSuccess();
+
+  // Act - Delete account
+  await test.step('Delete account via top bar link', async () => {
+    await authPage.clickDeleteAccountLink();
+    await expect(authPage.deleteAccountConfirmInput).toBeVisible();
+    await authPage.deleteAccount('USUŃ');
+    await authPage.waitForDeleteSuccess('/');
+  });
+
+  // Assert - Verify account is deleted
+  await test.step('Verify account is deleted', async () => {
+    // Should be redirected to home page
+    await expect(authPage.page).toHaveURL('/');
+
+    // Delete account link should not be visible (user logged out)
+    await expect(authPage.deleteAccountLink).not.toBeVisible();
+
+    // Try to login - should fail
+    await authPage.gotoLogin();
+    const loginFailed = await authPage.expectLoginFailure(email, TEST_CREDENTIALS.password);
+    expect(loginFailed).toBe(true);
+
+    // Error message should be visible
+    await expect(authPage.loginFormError).toBeVisible();
+    const errorText = await authPage.loginFormError.textContent();
+    expect(errorText).toMatch(/Invalid|nie|błąd/i);
+  });
+});
+```
+
+**Kluczowe elementy:**
+- `clickDeleteAccountLink()` - Kliknięcie linku w top barze
+- `deleteAccount('USUŃ')` - Wpisanie potwierdzenia i kliknięcie przycisku
+- `waitForDeleteSuccess('/')` - Oczekiwanie na przekierowanie
+- `expectLoginFailure()` - Weryfikacja, że logowanie się nie udaje
 
 ---
 

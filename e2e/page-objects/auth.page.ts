@@ -20,6 +20,12 @@ export class AuthPage {
   readonly loginSubmitButton: Locator;
   readonly loginFormError: Locator;
 
+  // Delete account elements
+  readonly deleteAccountLink: Locator;
+  readonly deleteAccountConfirmInput: Locator;
+  readonly deleteAccountSubmitButton: Locator;
+  readonly deleteAccountError: Locator;
+
   constructor(page: Page) {
     this.page = page;
     
@@ -35,6 +41,12 @@ export class AuthPage {
     this.loginPasswordInput = page.locator('input[name="password"][type="password"]');
     this.loginSubmitButton = page.locator('button[type="submit"]');
     this.loginFormError = page.locator('[role="alert"]');
+
+    // Delete account selectors (based on Layout.astro and DeleteAccountConfirm.tsx)
+    this.deleteAccountLink = page.locator('a[href="/auth/delete-account"]');
+    this.deleteAccountConfirmInput = page.locator('input[name="confirm"]');
+    this.deleteAccountSubmitButton = page.locator('button[type="submit"][variant="destructive"], button.destructive[type="submit"]');
+    this.deleteAccountError = page.locator('[role="alert"]');
   }
 
   /**
@@ -63,7 +75,15 @@ export class AuthPage {
     await this.registerEmailInput.fill(email);
     await this.registerPasswordInput.fill(password);
     await this.registerConfirmPasswordInput.fill(confirmPassword || password);
-    await this.registerSubmitButton.click();
+
+    // Wait for React hydration by triggering form submit via JavaScript
+    // This ensures the React event handlers are attached
+    await this.page.evaluate(() => {
+      const form = document.querySelector('form');
+      if (form) {
+        form.requestSubmit();
+      }
+    });
   }
 
   /**
@@ -74,7 +94,15 @@ export class AuthPage {
   async login(email: string, password: string) {
     await this.loginEmailInput.fill(email);
     await this.loginPasswordInput.fill(password);
-    await this.loginSubmitButton.click();
+
+    // Wait for React hydration by triggering form submit via JavaScript
+    // This ensures the React event handlers are attached
+    await this.page.evaluate(() => {
+      const form = document.querySelector('form');
+      if (form) {
+        form.requestSubmit();
+      }
+    });
   }
 
   /**
@@ -91,6 +119,52 @@ export class AuthPage {
    */
   async waitForLoginSuccess(expectedUrl = '/app/generate') {
     await this.page.waitForURL(`**${expectedUrl}`, { timeout: 10000 });
+  }
+
+  /**
+   * Navigate to delete account page
+   */
+  async gotoDeleteAccount() {
+    await this.page.goto('/auth/delete-account');
+    await this.page.waitForLoadState('networkidle');
+  }
+
+  /**
+   * Click delete account link in top bar
+   */
+  async clickDeleteAccountLink() {
+    await this.deleteAccountLink.click();
+    await this.page.waitForLoadState('networkidle');
+  }
+
+  /**
+   * Delete account by typing confirmation and submitting
+   * @param confirmation - Confirmation text (default: 'USUŃ')
+   */
+  async deleteAccount(confirmation = 'USUŃ') {
+    await this.deleteAccountConfirmInput.fill(confirmation);
+    await this.deleteAccountSubmitButton.click();
+  }
+
+  /**
+   * Wait for successful account deletion redirect
+   * Default redirect is to home page
+   */
+  async waitForDeleteSuccess(expectedUrl = '/') {
+    await this.page.waitForURL(`**${expectedUrl}`, { timeout: 10000 });
+  }
+
+  /**
+   * Attempt to login and expect failure
+   * @param email - User email
+   * @param password - User password
+   * @returns True if login failed (error message visible)
+   */
+  async expectLoginFailure(email: string, password: string): Promise<boolean> {
+    await this.login(email, password);
+    // Wait for error message to appear
+    await this.loginFormError.waitFor({ state: 'visible', timeout: 5000 });
+    return await this.loginFormError.isVisible();
   }
 
   /**

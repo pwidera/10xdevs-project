@@ -424,17 +424,130 @@ export function OriginBadge({ origin, ...props }: OriginBadgeProps) {
 
 ---
 
+### 7. Layout.astro (Top Bar)
+
+**Lokalizacja:** `src/layouts/Layout.astro`
+
+**Zmiany:**
+```tsx
+<nav class="flex items-center gap-3">
+  {Astro.locals?.user ? (
+    <>
+      <span class="text-sm text-muted-foreground">{Astro.locals.user.email}</span>
+      <a
+        data-testid="change-password-link"
+        href="/auth/change-password"
+        class="text-sm"
+      >
+        Zmień hasło
+      </a>
+      <a
+        data-testid="delete-account-link"
+        href="/auth/delete-account"
+        class="text-sm"
+      >
+        Usuń konto
+      </a>
+      <a
+        data-testid="logout-link"
+        href="#"
+        id="logout-link"
+        class="text-sm"
+      >
+        Wyloguj
+      </a>
+    </>
+  ) : (
+    <>
+      <a
+        data-testid="login-link"
+        href="/auth/login"
+        class="text-sm"
+      >
+        Zaloguj
+      </a>
+      <a
+        data-testid="register-link"
+        href="/auth/register"
+        class="text-sm"
+      >
+        Zarejestruj
+      </a>
+    </>
+  )}
+  <ThemeToggle client:load />
+</nav>
+```
+
+---
+
+### 8. DeleteAccountConfirm.tsx
+
+**Lokalizacja:** `src/components/auth/DeleteAccountConfirm.tsx`
+
+**Zmiany:**
+```tsx
+<form onSubmit={onSubmit} className="space-y-4">
+  {error && (
+    <div
+      data-testid="delete-account-error"
+      role="alert"
+      className="text-sm text-red-600"
+    >
+      {error}
+    </div>
+  )}
+
+  <div className="space-y-2">
+    <Label htmlFor="confirm">Aby potwierdzić, wpisz: USUŃ</Label>
+    <Input
+      data-testid="delete-account-confirm"
+      id="confirm"
+      name="confirm"
+      value={confirm}
+      onChange={(e) => setConfirm(e.target.value)}
+      disabled={loading}
+    />
+  </div>
+
+  <Button
+    data-testid="delete-account-submit"
+    type="submit"
+    variant="destructive"
+    disabled={loading}
+    className="w-full"
+  >
+    {loading ? 'Usuwanie…' : 'Usuń konto'}
+  </Button>
+</form>
+```
+
+---
+
 ## 🔄 Aktualizacja Page Objects
 
 Po dodaniu `data-testid`, zaktualizuj Page Objects aby ich używały:
 
 ### AuthPage
 ```typescript
+// Register form
 this.registerEmailInput = page.getByTestId('auth-register-email');
 this.registerPasswordInput = page.getByTestId('auth-register-password');
 this.registerConfirmPasswordInput = page.getByTestId('auth-register-confirm-password');
 this.registerSubmitButton = page.getByTestId('auth-register-submit');
 this.registerFormError = page.getByTestId('auth-register-error');
+
+// Login form
+this.loginEmailInput = page.getByTestId('auth-login-email');
+this.loginPasswordInput = page.getByTestId('auth-login-password');
+this.loginSubmitButton = page.getByTestId('auth-login-submit');
+this.loginFormError = page.getByTestId('auth-login-error');
+
+// Delete account
+this.deleteAccountLink = page.getByTestId('delete-account-link');
+this.deleteAccountConfirmInput = page.getByTestId('delete-account-confirm');
+this.deleteAccountSubmitButton = page.getByTestId('delete-account-submit');
+this.deleteAccountError = page.getByTestId('delete-account-error');
 ```
 
 ### GeneratePage
@@ -470,6 +583,8 @@ this.getOriginBadge = (index) => this.getFlashcardRow(index).getByTestId('origin
 - [ ] SaveSelectedBar.tsx - dodano `data-testid`
 - [ ] FlashcardRow.tsx - dodano `data-testid`
 - [ ] OriginBadge.tsx - dodano `data-testid`
+- [ ] Layout.astro - dodano `data-testid` (top bar links)
+- [ ] DeleteAccountConfirm.tsx - dodano `data-testid`
 - [ ] Page Objects zaktualizowane
 - [ ] Testy uruchomione i przechodzą
 
@@ -488,11 +603,13 @@ this.getOriginBadge = (index) => this.getFlashcardRow(index).getByTestId('origin
 - `flashcard-origin` - badge z typem pochodzenia fiszki
 
 **Sekcje:**
-- `auth-*` - autentykacja
+- `auth-*` - autentykacja (login, register)
 - `generate-*` - generowanie fiszek
 - `proposals-*` - propozycje fiszek
-- `flashcard-*` - fiszki
+- `flashcard-*` - pojedyncza fiszka
 - `flashcards-*` - lista fiszek
+- `delete-account-*` - usuwanie konta
+- `*-link` - linki nawigacyjne
 
 ---
 

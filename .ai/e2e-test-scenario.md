@@ -57,6 +57,14 @@ Zweryfikować, że nowy użytkownik może zarejestrować się, wygenerować 5 fi
    - Zweryfikuj, że widoczne są dokładnie 5 fiszek odpowiadających nowo wygenerowanym.
    - Zweryfikuj, że każda z nich ma typ „AI” (np. znaczek/badge „AI” albo metadane „Typ: AI”).
 
+8) Usuń konto użytkownika
+   - Kliknij link „Usuń konto" w top barze (nawigacja w nagłówku).
+   - Zostaniesz przekierowany na stronę `/auth/delete-account`.
+   - Wpisz „USUŃ" w pole potwierdzenia.
+   - Kliknij przycisk „Usuń konto".
+   - Oczekiwane: Konto zostaje usunięte, użytkownik zostaje wylogowany i przekierowany na stronę główną (`/`).
+   - Opcjonalnie: Spróbuj zalogować się ponownie tym samym emailem - powinno się nie udać (błąd „Invalid login credentials").
+
 ## Assercje (przykładowe w Playwright)
 - Liczba fiszek: `await expect(page.getByTestId('flashcard-item')).toHaveCount(5)`
 - Typ AI na każdej fiszce: dla każdego elementu `flashcard-item` oczekuj obecności `getByTestId('flashcard-type').toHaveText(/AI/i)` lub badge z tekstem „AI”.
@@ -77,6 +85,10 @@ Zweryfikować, że nowy użytkownik może zarejestrować się, wygenerować 5 fi
 - Lista fiszek:
   - Element fiszki: `[data-testid="flashcard-item"]`
   - Typ fiszki: `[data-testid="flashcard-type"]`
+- Usuwanie konta:
+  - Link w top barze: `a[href="/auth/delete-account"]` lub `[data-testid="delete-account-link"]`
+  - Pole potwierdzenia: `input[name="confirm"]` lub `[data-testid="delete-account-confirm"]`
+  - Przycisk usuń: `button[type="submit"]` lub `[data-testid="delete-account-submit"]`
 
 ## Wskazówki implementacyjne (Playwright)
 - Generowanie unikalnego emaila:
@@ -94,6 +106,9 @@ Zweryfikować, że nowy użytkownik może zarejestrować się, wygenerować 5 fi
 - Wygenerowane zostaje dokładnie 5 fiszek z podanego tekstu.
 - Wszystkie 5 fiszek zostaje zatwierdzonych.
 - Na stronie `/app/flashcard` są widoczne te 5 fiszek i każda posiada typ „AI”.
+- Użytkownik może usunąć swoje konto poprzez link w top barze.
+- Po usunięciu konta użytkownik jest wylogowany i przekierowany na stronę główną.
+- Próba ponownego zalogowania tym samym emailem kończy się błędem.
 
 ---
 

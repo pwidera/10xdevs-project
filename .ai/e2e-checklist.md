@@ -175,6 +175,9 @@
 - [x] Wszystkie 5 fiszek zostaje zatwierdzonych
 - [x] Na stronie `/app/flashcard` widoczne są te 5 fiszek
 - [x] Każda fiszka posiada typ "AI"
+- [x] **NOWE:** Użytkownik może usunąć swoje konto przez link w top barze
+- [x] **NOWE:** Po usunięciu konta użytkownik jest wylogowany i przekierowany
+- [x] **NOWE:** Próba logowania usuniętym kontem kończy się błędem
 - [x] Testy są dobrze udokumentowane
 - [x] Testy używają Page Object Model
 - [x] Testy są zgodne z wytycznymi Playwright

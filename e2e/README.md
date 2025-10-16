@@ -111,6 +111,15 @@ await authPage.gotoLogin();
 await authPage.login('user@e2etest.com', 'password123');
 await authPage.waitForLoginSuccess();
 
+// Usuwanie konta
+await authPage.clickDeleteAccountLink();  // Kliknij link w top barze
+await authPage.deleteAccount('USUŃ');     // Wpisz potwierdzenie i usuń
+await authPage.waitForDeleteSuccess('/'); // Czekaj na przekierowanie
+
+// Weryfikacja usunięcia konta
+const loginFailed = await authPage.expectLoginFailure('user@e2etest.com', 'password123');
+expect(loginFailed).toBe(true);
+
 // Generowanie unikalnego emaila testowego
 const email = AuthPage.generateTestEmail('prefix'); // prefix+timestamp@e2etest.com
 ```
@@ -180,6 +189,8 @@ await flashcardsPage.search('fotosynteza');
 5. ✅ Zatwierdzenie wszystkich fiszek (bulk action)
 6. ✅ Przejście na `/app/flashcard`
 7. ✅ Weryfikacja: 5 fiszek widocznych, wszystkie typu AI
+8. ✅ Usunięcie konta użytkownika
+9. ✅ Weryfikacja: konto usunięte, logowanie niemożliwe
 
 **Scenariusz 2: Indywidualne zatwierdzanie propozycji**
 
