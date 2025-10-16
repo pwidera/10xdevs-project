@@ -120,6 +120,7 @@ create trigger flashcards_bi_set_user_id
 -- 1) updated_at maintenance
 -- 2) immutable fields: user_id, generation_session_id
 -- 3) origin change allowed only: 'AI_full' → 'AI_edited'
+-- 4) automatic origin change: AI_full → AI_edited when content changes
 create or replace function public.flashcards_before_update()
 returns trigger language plpgsql as $$
 begin
@@ -131,6 +132,12 @@ begin
   -- immutability: generation_session_id cannot change after insert
   if new.generation_session_id is distinct from old.generation_session_id then
     raise exception 'flashcards.generation_session_id is immutable after insert';
+  end if;
+
+  -- automatic origin transition: AI_full → AI_edited when content changes
+  if old.origin = 'AI_full' and
+     (new.front_text is distinct from old.front_text or new.back_text is distinct from old.back_text) then
+    new.origin := 'AI_edited';
   end if;
 
   -- origin transitions: only allow AI_full -> AI_edited; all others rejected
