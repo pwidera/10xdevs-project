@@ -1,12 +1,14 @@
 ---
 import "../styles/global.css";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { MobileNav } from "@/components/ui/mobile-nav";
 
 interface Props {
   title?: string;
 }
 
 const { title = "10x Astro Starter" } = Astro.props;
+const isAuthenticated = !!Astro.locals?.user;
 ---
 
 <!doctype html>
@@ -30,7 +32,10 @@ const { title = "10x Astro Starter" } = Astro.props;
   <body>
     <header class="border-b">
       <div class="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
-        <a href="/" class="font-semibold">10xFlashAI</a>
+        <div class="flex items-center gap-3">
+          <MobileNav isAuthenticated={isAuthenticated} client:load />
+          <a href="/" class="font-semibold">10xFlashAI</a>
+        </div>
         <nav class="flex items-center gap-3">
           {Astro.locals?.user ? (
             <>
