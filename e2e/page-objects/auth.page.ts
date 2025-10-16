@@ -45,7 +45,7 @@ export class AuthPage {
     // Delete account selectors (based on Layout.astro and DeleteAccountConfirm.tsx)
     this.deleteAccountLink = page.locator('a[href="/auth/delete-account"]');
     this.deleteAccountConfirmInput = page.locator('input[name="confirm"]');
-    this.deleteAccountSubmitButton = page.locator('button[type="submit"][variant="destructive"], button.destructive[type="submit"]');
+    this.deleteAccountSubmitButton = page.locator('button[type="submit"]:has-text("Usuń konto")');
     this.deleteAccountError = page.locator('[role="alert"]');
   }
 

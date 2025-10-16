@@ -264,9 +264,54 @@ test.describe('Flashcard Generation Flow', () => {
     await test.step('Verify only 2 flashcards saved', async () => {
       await flashcardsPage.goto();
       await flashcardsPage.waitForFlashcardsLoad();
-      
+
       const flashcardsCount = await flashcardsPage.getFlashcardsCount();
       expect(flashcardsCount).toBe(2);
+    });
+
+    // ============================================================================
+    // Delete user account
+    // ============================================================================
+    await test.step('Delete user account', async () => {
+      // Click delete account link in top bar
+      await authPage.clickDeleteAccountLink();
+
+      // Verify we're on delete account page
+      await expect(page).toHaveURL(/\/auth\/delete-account/);
+
+      // Verify delete account form is visible
+      await expect(authPage.deleteAccountConfirmInput).toBeVisible();
+      await expect(authPage.deleteAccountSubmitButton).toBeVisible();
+
+      // Delete account
+      await authPage.deleteAccount('USUŃ');
+
+      // Wait for successful deletion and redirect to home
+      await authPage.waitForDeleteSuccess('/');
+
+      // Verify we're on home page
+      await expect(page).toHaveURL('/');
+
+      // Verify user is logged out (delete account link should not be visible)
+      await expect(authPage.deleteAccountLink).not.toBeVisible();
+    });
+
+    // ============================================================================
+    // Verify account is deleted - try to login
+    // ============================================================================
+    await test.step('Verify account is deleted', async () => {
+      // Try to login with deleted account
+      await authPage.gotoLogin();
+
+      // Attempt login
+      const loginFailed = await authPage.expectLoginFailure(testEmail, TEST_CREDENTIALS.password);
+
+      // Verify login failed
+      expect(loginFailed).toBe(true);
+
+      // Verify error message contains "Invalid" or similar
+      const errorText = await authPage.loginFormError.textContent();
+      expect(errorText).toMatch(/Invalid|nie|błąd/i);
     });
   });
 });

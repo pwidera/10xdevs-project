@@ -31,7 +31,7 @@ export function LanguageSelect({ value, onChange, disabled = false }: LanguageSe
     <div className="space-y-2">
       <Label htmlFor={id}>Preferowany język</Label>
       
-      <Select value={selectValue} onValueChange={handleValueChange} disabled={disabled}>
+      <Select name="language" value={selectValue} onValueChange={handleValueChange} disabled={disabled}>
         <SelectTrigger id={id} className="w-full">
           <SelectValue placeholder="Wybierz język" />
         </SelectTrigger>

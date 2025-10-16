@@ -68,27 +68,38 @@ export class GeneratePage {
   ) {
     // Fill source text
     await this.sourceTextarea.fill(sourceText);
-    
+
     // Set language if select is visible
     if (await this.languageSelect.isVisible()) {
       await this.languageSelect.selectOption(language);
     }
-    
+
     // Set max proposals
     await this.maxProposalsInput.fill(maxProposals.toString());
-    
-    // Click generate button
-    await this.generateButton.click();
+
+    // Submit form via JavaScript to ensure React handlers are triggered
+    // This works around React hydration timing issues
+    await this.page.evaluate(() => {
+      const form = document.querySelector('form');
+      if (form) {
+        form.requestSubmit();
+      }
+    });
   }
 
   /**
    * Wait for generation to complete
-   * Waits for proposals heading to appear
+   * Waits for proposals heading to appear and at least one proposal card
    */
   async waitForGenerationComplete() {
+    // Wait for proposals heading to appear
     await this.proposalsHeading.waitFor({ state: 'visible', timeout: 30000 });
-    // Wait for loading indicator to disappear
-    await this.loadingIndicator.waitFor({ state: 'detached', timeout: 30000 });
+
+    // Wait for at least one proposal card to be rendered
+    await this.page.locator('[role="article"]').first().waitFor({
+      state: 'visible',
+      timeout: 30000
+    });
   }
 
   /**
@@ -96,8 +107,8 @@ export class GeneratePage {
    * @returns Array of proposal card locators
    */
   getProposalCards() {
-    // Based on ProposalList.tsx structure - cards are in a grid
-    return this.page.locator('[class*="grid"] > div[class*="rounded"]');
+    // Based on ProposalList.tsx structure - cards have role="article"
+    return this.page.locator('[role="article"]');
   }
 
   /**
@@ -114,8 +125,13 @@ export class GeneratePage {
    */
   async acceptProposal(index: number) {
     const card = this.getProposalCard(index);
-    const acceptButton = card.locator('button:has-text("Zatwierdź")');
-    await acceptButton.click();
+    const acceptButton = card.locator('button:has-text("Akceptuj")');
+
+    // Wait for button to be visible
+    await acceptButton.waitFor({ state: 'visible', timeout: 10000 });
+
+    // Use JavaScript click to work around React hydration issues
+    await acceptButton.evaluate((btn: HTMLButtonElement) => btn.click());
   }
 
   /**
@@ -125,7 +141,12 @@ export class GeneratePage {
   async rejectProposal(index: number) {
     const card = this.getProposalCard(index);
     const rejectButton = card.locator('button:has-text("Odrzuć")');
-    await rejectButton.click();
+
+    // Wait for button to be visible
+    await rejectButton.waitFor({ state: 'visible', timeout: 10000 });
+
+    // Use JavaScript click to work around React hydration issues
+    await rejectButton.evaluate((btn: HTMLButtonElement) => btn.click());
   }
 
   /**

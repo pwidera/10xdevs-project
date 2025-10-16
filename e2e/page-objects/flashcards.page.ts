@@ -31,9 +31,9 @@ export class FlashcardsPage {
     this.sortSelect = page.locator('select[name="sort"]');
     
     // List selectors (based on FlashcardsList.tsx and FlashcardRow.tsx)
-    this.flashcardRows = page.locator('div[class*="rounded-lg border bg-card"]');
+    this.flashcardRows = page.locator('.rounded-lg.border.bg-card.p-4');
     this.emptyState = page.locator('text=/Nie znaleziono|Brak fiszek/');
-    this.loadingSkeleton = page.locator('div[class*="animate-pulse"]');
+    this.loadingSkeleton = page.locator('.animate-pulse');
     
     // Pagination selectors
     this.paginationInfo = page.locator('text=/Strona \\d+ z \\d+/');
@@ -45,19 +45,25 @@ export class FlashcardsPage {
    * Navigate to flashcards list page
    */
   async goto() {
-    await this.page.goto('/app/flashcard');
+    await this.page.goto('/app/flashcards');
     await this.page.waitForLoadState('networkidle');
   }
 
   /**
    * Wait for flashcards to load
-   * Waits for loading skeleton to disappear
+   * Waits for loading skeleton to disappear and content to appear
    */
   async waitForFlashcardsLoad() {
     await this.loadingSkeleton.waitFor({ state: 'detached', timeout: 10000 }).catch(() => {
       // Skeleton might not appear if data loads quickly
     });
     await this.page.waitForLoadState('networkidle');
+
+    // Wait for either flashcards or empty state to appear
+    await Promise.race([
+      this.flashcardRows.first().waitFor({ state: 'visible', timeout: 5000 }).catch(() => {}),
+      this.emptyState.waitFor({ state: 'visible', timeout: 5000 }).catch(() => {})
+    ]);
   }
 
   /**
@@ -90,8 +96,8 @@ export class FlashcardsPage {
    * @returns Locator for the origin badge
    */
   getOriginBadge(index: number) {
-    // Based on OriginBadge.tsx - it's a Badge component with text
-    return this.getFlashcardRow(index).locator('[class*="badge"]').first();
+    // Based on Badge component - uses data-slot="badge"
+    return this.getFlashcardRow(index).locator('[data-slot="badge"]').first();
   }
 
   /**

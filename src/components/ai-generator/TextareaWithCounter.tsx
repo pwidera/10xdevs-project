@@ -49,6 +49,7 @@ export function TextareaWithCounter({
       
       <Textarea
         id={id}
+        name="sourceText"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}

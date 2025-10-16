@@ -43,6 +43,7 @@ export function NumberInput({
       
       <Input
         id={id}
+        name="maxProposals"
         type="number"
         value={value}
         onChange={handleChange}
