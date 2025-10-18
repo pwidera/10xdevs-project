@@ -147,6 +147,11 @@ jobs:
 
       - name: Post success comment
         uses: actions/github-script@v7
+        env:
+          RUN_NUMBER: ${{ github.run_number }}
+          SERVER_URL: ${{ github.server_url }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
         with:
           script: |
             const comment = `## ✅ Pull Request CI - All Checks Passed
@@ -154,12 +159,11 @@ jobs:
             ### Test Results
             - ✅ **Linting**: Passed
             - ✅ **Unit Tests**: Passed
-#            - ✅ **E2E Tests**: Passed
 
             All quality checks have passed successfully! 🎉
 
             ---
-            *Workflow run: [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})*`;
+            *Workflow run: [#${process.env.RUN_NUMBER}](${process.env.SERVER_URL}/${process.env.REPOSITORY}/actions/runs/${process.env.RUN_ID})*`;
 
             github.rest.issues.createComment({
               issue_number: context.issue.number,
