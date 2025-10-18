@@ -2,19 +2,19 @@
  * GET /api/flashcards/{id}
  * PUT /api/flashcards/{id}
  * DELETE /api/flashcards/{id}
- * 
+ *
  * Endpoints for individual flashcard operations:
  * - GET: Retrieve a single flashcard by ID
  * - PUT: Update flashcard content (front_text and/or back_text)
  * - DELETE: Permanently delete a flashcard
- * 
+ *
  * Features:
  * - Requires JWT authentication
  * - RLS ensures users can only access their own flashcards
  * - Validates UUID path parameter
  * - PUT validates at least one field is provided
  * - Origin may change AI_full → AI_edited (DB trigger on content change)
- * 
+ *
  * GET Response (200):
  * {
  *   id: string,
@@ -25,13 +25,13 @@
  *   created_at: string,
  *   updated_at: string
  * }
- * 
+ *
  * PUT Request Body:
  * {
  *   front_text?: string (1-1000 chars),
  *   back_text?: string (1-1000 chars)
  * }
- * 
+ *
  * PUT Response (200):
  * {
  *   id: string,
@@ -40,12 +40,12 @@
  *   origin: "manual" | "AI_full" | "AI_edited",
  *   updated_at: string
  * }
- * 
+ *
  * DELETE Response (200):
  * {
  *   success: true
  * }
- * 
+ *
  * Response Codes:
  * - 200: Success
  * - 400: Validation error
@@ -54,17 +54,12 @@
  * - 500: Internal server error
  */
 
-import type { APIRoute } from 'astro';
-import { z } from 'zod';
+import type { APIRoute } from "astro";
+import { z } from "zod";
 
-import type { FlashcardDTO, UpdateFlashcardResponse, DeleteFlashcardResponse } from '@/types';
-import { IdParamSchema, UpdateFlashcardSchema } from '@/lib/validation/flashcards.schema';
-import {
-  getById,
-  update,
-  deleteFlashcard,
-  FlashcardServiceError,
-} from '@/lib/services/flashcard.service';
+import type { FlashcardDTO, UpdateFlashcardResponse, DeleteFlashcardResponse } from "@/types";
+import { IdParamSchema, UpdateFlashcardSchema } from "@/lib/validation/flashcards.schema";
+import { getById, update, deleteFlashcard, FlashcardServiceError } from "@/lib/services/flashcard.service";
 
 // Disable prerendering for this API route
 export const prerender = false;
@@ -74,7 +69,7 @@ export const prerender = false;
  */
 function json(body: unknown, init?: ResponseInit) {
   return new Response(JSON.stringify(body), {
-    headers: { 'Content-Type': 'application/json' },
+    headers: { "Content-Type": "application/json" },
     ...init,
   });
 }
@@ -90,8 +85,8 @@ export const GET: APIRoute = async (context) => {
   if (!context.locals.user) {
     return json(
       {
-        error: 'Unauthorized',
-        message: 'Authentication required',
+        error: "Unauthorized",
+        message: "Authentication required",
       },
       { status: 401 }
     );
@@ -105,16 +100,26 @@ export const GET: APIRoute = async (context) => {
 
   const flashcardId = context.params.id;
 
+  if (!flashcardId) {
+    return json(
+      {
+        error: "Validation error",
+        message: "Flashcard ID is required",
+      },
+      { status: 400 }
+    );
+  }
+
   try {
     IdParamSchema.parse(flashcardId);
   } catch (error) {
     if (error instanceof z.ZodError) {
       return json(
         {
-          error: 'Validation error',
-          message: 'Invalid flashcard ID format',
+          error: "Validation error",
+          message: "Invalid flashcard ID format",
           details: error.errors.map((err) => ({
-            field: err.path.join('.'),
+            field: err.path.join("."),
             message: err.message,
           })),
         },
@@ -128,7 +133,7 @@ export const GET: APIRoute = async (context) => {
   // ============================================================================
 
   try {
-    const flashcard: FlashcardDTO = await getById(supabase, flashcardId!);
+    const flashcard: FlashcardDTO = await getById(supabase, flashcardId);
 
     return json(flashcard, { status: 200 });
   } catch (error) {
@@ -144,11 +149,11 @@ export const GET: APIRoute = async (context) => {
     }
 
     // Handle unexpected errors
-    console.error('Unexpected error during flashcard retrieval:', error);
+    console.error("Unexpected error during flashcard retrieval:", error);
     return json(
       {
-        error: 'Internal server error',
-        message: 'An unexpected error occurred',
+        error: "Internal server error",
+        message: "An unexpected error occurred",
       },
       { status: 500 }
     );
@@ -166,8 +171,8 @@ export const PUT: APIRoute = async (context) => {
   if (!context.locals.user) {
     return json(
       {
-        error: 'Unauthorized',
-        message: 'Authentication required',
+        error: "Unauthorized",
+        message: "Authentication required",
       },
       { status: 401 }
     );
@@ -181,16 +186,26 @@ export const PUT: APIRoute = async (context) => {
 
   const flashcardId = context.params.id;
 
+  if (!flashcardId) {
+    return json(
+      {
+        error: "Validation error",
+        message: "Flashcard ID is required",
+      },
+      { status: 400 }
+    );
+  }
+
   try {
     IdParamSchema.parse(flashcardId);
   } catch (error) {
     if (error instanceof z.ZodError) {
       return json(
         {
-          error: 'Validation error',
-          message: 'Invalid flashcard ID format',
+          error: "Validation error",
+          message: "Invalid flashcard ID format",
           details: error.errors.map((err) => ({
-            field: err.path.join('.'),
+            field: err.path.join("."),
             message: err.message,
           })),
         },
@@ -207,11 +222,11 @@ export const PUT: APIRoute = async (context) => {
 
   try {
     requestBody = await context.request.json();
-  } catch (error) {
+  } catch {
     return json(
       {
-        error: 'Invalid JSON',
-        message: 'Request body must be valid JSON',
+        error: "Invalid JSON",
+        message: "Request body must be valid JSON",
       },
       { status: 400 }
     );
@@ -224,11 +239,7 @@ export const PUT: APIRoute = async (context) => {
     // STEP 4: Update flashcard
     // ============================================================================
 
-    const updatedFlashcard: UpdateFlashcardResponse = await update(
-      supabase,
-      flashcardId!,
-      validatedData
-    );
+    const updatedFlashcard: UpdateFlashcardResponse = await update(supabase, flashcardId, validatedData);
 
     return json(updatedFlashcard, { status: 200 });
   } catch (error) {
@@ -236,9 +247,9 @@ export const PUT: APIRoute = async (context) => {
     if (error instanceof z.ZodError) {
       return json(
         {
-          error: 'Validation error',
+          error: "Validation error",
           details: error.errors.map((err) => ({
-            field: err.path.join('.'),
+            field: err.path.join("."),
             message: err.message,
           })),
         },
@@ -258,11 +269,11 @@ export const PUT: APIRoute = async (context) => {
     }
 
     // Handle unexpected errors
-    console.error('Unexpected error during flashcard update:', error);
+    console.error("Unexpected error during flashcard update:", error);
     return json(
       {
-        error: 'Internal server error',
-        message: 'An unexpected error occurred',
+        error: "Internal server error",
+        message: "An unexpected error occurred",
       },
       { status: 500 }
     );
@@ -280,8 +291,8 @@ export const DELETE: APIRoute = async (context) => {
   if (!context.locals.user) {
     return json(
       {
-        error: 'Unauthorized',
-        message: 'Authentication required',
+        error: "Unauthorized",
+        message: "Authentication required",
       },
       { status: 401 }
     );
@@ -295,16 +306,26 @@ export const DELETE: APIRoute = async (context) => {
 
   const flashcardId = context.params.id;
 
+  if (!flashcardId) {
+    return json(
+      {
+        error: "Validation error",
+        message: "Flashcard ID is required",
+      },
+      { status: 400 }
+    );
+  }
+
   try {
     IdParamSchema.parse(flashcardId);
   } catch (error) {
     if (error instanceof z.ZodError) {
       return json(
         {
-          error: 'Validation error',
-          message: 'Invalid flashcard ID format',
+          error: "Validation error",
+          message: "Invalid flashcard ID format",
           details: error.errors.map((err) => ({
-            field: err.path.join('.'),
+            field: err.path.join("."),
             message: err.message,
           })),
         },
@@ -318,7 +339,7 @@ export const DELETE: APIRoute = async (context) => {
   // ============================================================================
 
   try {
-    const result: DeleteFlashcardResponse = await deleteFlashcard(supabase, flashcardId!);
+    const result: DeleteFlashcardResponse = await deleteFlashcard(supabase, flashcardId);
 
     return json(result, { status: 200 });
   } catch (error) {
@@ -334,14 +355,13 @@ export const DELETE: APIRoute = async (context) => {
     }
 
     // Handle unexpected errors
-    console.error('Unexpected error during flashcard deletion:', error);
+    console.error("Unexpected error during flashcard deletion:", error);
     return json(
       {
-        error: 'Internal server error',
-        message: 'An unexpected error occurred',
+        error: "Internal server error",
+        message: "An unexpected error occurred",
       },
       { status: 500 }
     );
   }
 };
-

@@ -1,13 +1,7 @@
 import { useState } from "react";
 import { Menu, Home, Sparkles, BookOpen } from "lucide-react";
 import { Button } from "./button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "./sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./sheet";
 
 interface MobileNavProps {
   /**
@@ -36,11 +30,7 @@ export function MobileNav({ isAuthenticated }: MobileNavProps) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          aria-label="Otwórz menu nawigacji"
-        >
+        <Button variant="ghost" size="icon" aria-label="Otwórz menu nawigacji">
           <Menu className="h-5 w-5" />
           <span className="sr-only">Otwórz menu</span>
         </Button>
@@ -76,4 +66,3 @@ export function MobileNav({ isAuthenticated }: MobileNavProps) {
     </Sheet>
   );
 }
-

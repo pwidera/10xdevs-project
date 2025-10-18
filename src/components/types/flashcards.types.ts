@@ -1,15 +1,11 @@
 /**
  * Flashcards View Models and Types (Frontend)
- * 
+ *
  * This file contains frontend-specific types for the flashcards feature.
  * These types extend the DTOs from src/types.ts with UI-specific state.
  */
 
-import type {
-  FlashcardDTO,
-  FlashcardOrigin,
-  FlashcardSortOption,
-} from '../../types';
+import type { FlashcardDTO, FlashcardOrigin, FlashcardSortOption } from "../../types";
 
 // ============================================================================
 // VIEW MODELS
@@ -18,13 +14,13 @@ import type {
 /**
  * Filters for flashcards list (synced with URL params)
  */
-export type FlashcardsFiltersVM = {
+export interface FlashcardsFiltersVM {
   q: string;
   origin: FlashcardOrigin | null;
   sort: FlashcardSortOption;
   page: number;
   page_size: number;
-};
+}
 
 /**
  * Single flashcard row with editing state
@@ -40,14 +36,14 @@ export type FlashcardRowVM = FlashcardDTO & {
 /**
  * Complete flashcards list state
  */
-export type FlashcardsListVM = {
+export interface FlashcardsListVM {
   items: FlashcardRowVM[];
   page: number;
   page_size: number;
   total: number;
   isLoading: boolean;
   error?: string;
-};
+}
 
 // ============================================================================
 // COMPONENT PROPS
@@ -56,101 +52,101 @@ export type FlashcardsListVM = {
 /**
  * Props for SearchInput component
  */
-export type SearchInputProps = {
+export interface SearchInputProps {
   value: string;
   onChange: (value: string) => void;
   debounceMs?: number;
   disabled?: boolean;
-};
+}
 
 /**
  * Props for SelectOrigin component
  */
-export type SelectOriginProps = {
+export interface SelectOriginProps {
   value: FlashcardOrigin | null;
   onChange: (value: FlashcardOrigin | null) => void;
   disabled?: boolean;
-};
+}
 
 /**
  * Props for SelectSort component
  */
-export type SelectSortProps = {
+export interface SelectSortProps {
   value: FlashcardSortOption;
   onChange: (value: FlashcardSortOption) => void;
   disabled?: boolean;
-};
+}
 
 /**
  * Props for FlashcardsToolbar component
  */
-export type FlashcardsToolbarProps = {
+export interface FlashcardsToolbarProps {
   filters: FlashcardsFiltersVM;
   onFiltersChange: (filters: Partial<FlashcardsFiltersVM>) => void;
   disabled?: boolean;
-};
+}
 
 /**
  * Props for FlashcardsList component
  */
-export type FlashcardsListProps = {
+export interface FlashcardsListProps {
   items: FlashcardRowVM[];
   isLoading: boolean;
   error?: string;
   onUpdate: (id: string, updates: Partial<FlashcardRowVM>) => void;
   onRemove: (id: string) => void;
   disabled?: boolean;
-};
+}
 
 /**
  * Props for FlashcardRow component
  */
-export type FlashcardRowProps = {
+export interface FlashcardRowProps {
   flashcard: FlashcardRowVM;
   onEdit: (id: string, frontText: string, backText: string) => Promise<void>;
   onDelete: (id: string) => void;
   disabled?: boolean;
-};
+}
 
 /**
  * Props for OriginBadge component
  */
-export type OriginBadgeProps = {
+export interface OriginBadgeProps {
   origin: FlashcardOrigin;
-};
+}
 
 /**
  * Props for Pagination component
  */
-export type PaginationProps = {
+export interface PaginationProps {
   page: number;
   pageSize: number;
   total: number;
   onPageChange: (page: number) => void;
   onPageSizeChange: (pageSize: number) => void;
   disabled?: boolean;
-};
+}
 
 /**
  * Props for ConfirmDialog component
  */
-export type ConfirmDialogProps = {
+export interface ConfirmDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
   title?: string;
   description?: string;
-};
+}
 
 /**
  * Props for FlashcardForm component
  */
-export type FlashcardFormProps = {
+export interface FlashcardFormProps {
   onSubmit: (frontText: string, backText: string) => Promise<void>;
   disabled?: boolean;
   initialFront?: string;
   initialBack?: string;
-};
+}
 
 // ============================================================================
 // CONSTANTS
@@ -167,18 +163,17 @@ export const PAGE_SIZE_OPTIONS = [10, 20, 50, 100] as const;
  * Origin display labels (Polish)
  */
 export const ORIGIN_LABELS: Record<FlashcardOrigin, string> = {
-  manual: 'Ręczne',
-  AI_full: 'AI',
-  AI_edited: 'AI (edytowane)',
+  manual: "Ręczne",
+  AI_full: "AI",
+  AI_edited: "AI (edytowane)",
 };
 
 /**
  * Sort option display labels (Polish)
  */
 export const SORT_LABELS: Record<FlashcardSortOption, string> = {
-  created_at_desc: 'Najnowsze',
-  created_at_asc: 'Najstarsze',
-  last_reviewed_at_asc: 'Najdawniej przeglądane',
-  last_reviewed_at_desc: 'Ostatnio przeglądane',
+  created_at_desc: "Najnowsze",
+  created_at_asc: "Najstarsze",
+  last_reviewed_at_asc: "Najdawniej przeglądane",
+  last_reviewed_at_desc: "Ostatnio przeglądane",
 };
-

@@ -1,9 +1,9 @@
-import { BulkActionBar } from './BulkActionBar';
-import { ProposalList } from './ProposalList';
-import { SaveSelectedBar } from './SaveSelectedBar';
-import type { ProposalVM } from '../types/ai-generator.types';
+import { BulkActionBar } from "./BulkActionBar";
+import { ProposalList } from "./ProposalList";
+import { SaveSelectedBar } from "./SaveSelectedBar";
+import type { ProposalVM } from "../types/ai-generator.types";
 
-type ProposalsSectionProps = {
+interface ProposalsSectionProps {
   proposals: ProposalVM[];
   acceptedCount: number;
   rejectedCount: number;
@@ -15,7 +15,7 @@ type ProposalsSectionProps = {
   onBulkAccept: () => void;
   onBulkReject: () => void;
   onSaveSelected: () => void;
-};
+}
 
 export function ProposalsSection({
   proposals,
@@ -38,7 +38,7 @@ export function ProposalsSection({
     <div className="space-y-6">
       <div className="space-y-4">
         <h2 className="text-2xl font-bold">Propozycje fiszek</h2>
-        
+
         <BulkActionBar
           pendingCount={pendingCount}
           acceptedCount={acceptedCount}
@@ -48,19 +48,9 @@ export function ProposalsSection({
         />
       </div>
 
-      <ProposalList
-        proposals={proposals}
-        onAccept={onAccept}
-        onReject={onReject}
-        onRevealToggle={onRevealToggle}
-      />
+      <ProposalList proposals={proposals} onAccept={onAccept} onReject={onReject} onRevealToggle={onRevealToggle} />
 
-      <SaveSelectedBar
-        acceptedCount={acceptedCount}
-        isSaving={isSaving}
-        onSave={onSaveSelected}
-      />
+      <SaveSelectedBar acceptedCount={acceptedCount} isSaving={isSaving} onSave={onSaveSelected} />
     </div>
   );
 }
-

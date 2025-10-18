@@ -1,22 +1,22 @@
-import { useId } from 'react';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { useId } from "react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
-type NumberInputProps = {
+interface NumberInputProps {
   value: number;
   onChange: (value: number) => void;
   min?: number;
   max?: number;
   label?: string;
   disabled?: boolean;
-};
+}
 
 export function NumberInput({
   value,
   onChange,
   min = 1,
   max = 20,
-  label = 'Liczba propozycji',
+  label = "Liczba propozycji",
   disabled = false,
 }: NumberInputProps) {
   const id = useId();
@@ -40,7 +40,7 @@ export function NumberInput({
   return (
     <div className="space-y-2">
       <Label htmlFor={id}>{label}</Label>
-      
+
       <Input
         id={id}
         name="maxProposals"
@@ -61,4 +61,3 @@ export function NumberInput({
     </div>
   );
 }
-

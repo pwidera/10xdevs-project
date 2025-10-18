@@ -1,12 +1,12 @@
 ---
-import Layout from '@/layouts/Layout.astro';
-import { DeleteAccountConfirm } from '@/components/auth/DeleteAccountConfirm';
+import Layout from "@/layouts/Layout.astro";
+import { DeleteAccountConfirm } from "@/components/auth/DeleteAccountConfirm";
 
 export const prerender = false;
 
 const { user } = Astro.locals;
 if (!user) {
-  return Astro.redirect('/auth/login?next=' + encodeURIComponent('/auth/delete-account'));
+  return Astro.redirect("/auth/login?next=" + encodeURIComponent("/auth/delete-account"));
 }
 ---
 
@@ -15,4 +15,3 @@ if (!user) {
     <DeleteAccountConfirm client:load />
   </main>
 </Layout>
-

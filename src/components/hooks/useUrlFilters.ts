@@ -1,14 +1,14 @@
-import { useState, useEffect, useCallback } from 'react';
-import type { FlashcardsFiltersVM } from '../types/flashcards.types';
-import type { FlashcardOrigin, FlashcardSortOption } from '../../types';
-import { DEFAULT_PAGE_SIZE, MIN_PAGE_SIZE, MAX_PAGE_SIZE } from '../types/flashcards.types';
+import { useState, useEffect, useCallback } from "react";
+import type { FlashcardsFiltersVM } from "../types/flashcards.types";
+import type { FlashcardOrigin, FlashcardSortOption } from "../../types";
+import { DEFAULT_PAGE_SIZE, MIN_PAGE_SIZE, MAX_PAGE_SIZE } from "../types/flashcards.types";
 
-const VALID_ORIGINS: FlashcardOrigin[] = ['manual', 'AI_full', 'AI_edited'];
+const VALID_ORIGINS: FlashcardOrigin[] = ["manual", "AI_full", "AI_edited"];
 const VALID_SORTS: FlashcardSortOption[] = [
-  'created_at_desc',
-  'created_at_asc',
-  'last_reviewed_at_asc',
-  'last_reviewed_at_desc',
+  "created_at_desc",
+  "created_at_asc",
+  "last_reviewed_at_asc",
+  "last_reviewed_at_desc",
 ];
 
 /**
@@ -16,26 +16,22 @@ const VALID_SORTS: FlashcardSortOption[] = [
  */
 function parseOrigin(value: string | null): FlashcardOrigin | null {
   if (!value) return null;
-  return VALID_ORIGINS.includes(value as FlashcardOrigin)
-    ? (value as FlashcardOrigin)
-    : null;
+  return VALID_ORIGINS.includes(value as FlashcardOrigin) ? (value as FlashcardOrigin) : null;
 }
 
 /**
  * Parse and validate sort from URL param
  */
 function parseSort(value: string | null): FlashcardSortOption {
-  if (!value) return 'created_at_desc';
-  return VALID_SORTS.includes(value as FlashcardSortOption)
-    ? (value as FlashcardSortOption)
-    : 'created_at_desc';
+  if (!value) return "created_at_desc";
+  return VALID_SORTS.includes(value as FlashcardSortOption) ? (value as FlashcardSortOption) : "created_at_desc";
 }
 
 /**
  * Parse and validate page number
  */
 function parsePage(value: string | null): number {
-  const parsed = parseInt(value || '1', 10);
+  const parsed = parseInt(value || "1", 10);
   return isNaN(parsed) || parsed < 1 ? 1 : parsed;
 }
 
@@ -53,11 +49,11 @@ function parsePageSize(value: string | null): number {
  */
 function parseFiltersFromUrl(searchParams: URLSearchParams): FlashcardsFiltersVM {
   return {
-    q: searchParams.get('q') || '',
-    origin: parseOrigin(searchParams.get('origin')),
-    sort: parseSort(searchParams.get('sort')),
-    page: parsePage(searchParams.get('page')),
-    page_size: parsePageSize(searchParams.get('page_size')),
+    q: searchParams.get("q") || "",
+    origin: parseOrigin(searchParams.get("origin")),
+    sort: parseSort(searchParams.get("sort")),
+    page: parsePage(searchParams.get("page")),
+    page_size: parsePageSize(searchParams.get("page_size")),
   };
 }
 
@@ -68,23 +64,23 @@ function buildUrlFromFilters(filters: FlashcardsFiltersVM): URLSearchParams {
   const params = new URLSearchParams();
 
   if (filters.q) {
-    params.set('q', filters.q);
+    params.set("q", filters.q);
   }
 
   if (filters.origin) {
-    params.set('origin', filters.origin);
+    params.set("origin", filters.origin);
   }
 
-  if (filters.sort !== 'created_at_desc') {
-    params.set('sort', filters.sort);
+  if (filters.sort !== "created_at_desc") {
+    params.set("sort", filters.sort);
   }
 
   if (filters.page > 1) {
-    params.set('page', String(filters.page));
+    params.set("page", String(filters.page));
   }
 
   if (filters.page_size !== DEFAULT_PAGE_SIZE) {
-    params.set('page_size', String(filters.page_size));
+    params.set("page_size", String(filters.page_size));
   }
 
   return params;
@@ -97,11 +93,11 @@ function buildUrlFromFilters(filters: FlashcardsFiltersVM): URLSearchParams {
 export function useUrlFilters() {
   // Initialize from URL
   const [filters, setFilters] = useState<FlashcardsFiltersVM>(() => {
-    if (typeof window === 'undefined') {
+    if (typeof window === "undefined") {
       return {
-        q: '',
+        q: "",
         origin: null,
-        sort: 'created_at_desc',
+        sort: "created_at_desc",
         page: 1,
         page_size: DEFAULT_PAGE_SIZE,
       };
@@ -113,31 +109,29 @@ export function useUrlFilters() {
 
   // Update URL when filters change
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     const params = buildUrlFromFilters(filters);
-    const newUrl = params.toString()
-      ? `${window.location.pathname}?${params.toString()}`
-      : window.location.pathname;
+    const newUrl = params.toString() ? `${window.location.pathname}?${params.toString()}` : window.location.pathname;
 
     // Only update if URL actually changed
     const currentUrl = `${window.location.pathname}${window.location.search}`;
     if (newUrl !== currentUrl) {
-      window.history.replaceState({}, '', newUrl);
+      window.history.replaceState({}, "", newUrl);
     }
   }, [filters]);
 
   // Listen to popstate (browser back/forward)
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     const handlePopState = () => {
       const searchParams = new URLSearchParams(window.location.search);
       setFilters(parseFiltersFromUrl(searchParams));
     };
 
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
   // Update filters (partial update)
@@ -150,4 +144,3 @@ export function useUrlFilters() {
     updateFilters,
   };
 }
-

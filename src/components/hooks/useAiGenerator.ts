@@ -1,5 +1,5 @@
-import { useReducer, useCallback } from 'react';
-import type { AiGeneratorState, AiGeneratorAction, ProposalVM } from '../types/ai-generator.types';
+import { useReducer, useCallback } from "react";
+import type { AiGeneratorState, AiGeneratorAction, ProposalVM } from "../types/ai-generator.types";
 
 const MIN_CHARS = 100;
 const MAX_CHARS = 10000;
@@ -8,7 +8,7 @@ const MAX_PROPOSALS = 20;
 
 function createInitialState(): AiGeneratorState {
   return {
-    sourceText: '',
+    sourceText: "",
     language: null,
     maxProposals: 20,
     charCount: 0,
@@ -30,8 +30,8 @@ function validateText(text: string): boolean {
 function calculateCounts(proposals: ProposalVM[]) {
   return proposals.reduce(
     (acc, p) => {
-      if (p.status === 'accepted') acc.accepted++;
-      else if (p.status === 'rejected') acc.rejected++;
+      if (p.status === "accepted") acc.accepted++;
+      else if (p.status === "rejected") acc.rejected++;
       else acc.pending++;
       return acc;
     },
@@ -41,7 +41,7 @@ function calculateCounts(proposals: ProposalVM[]) {
 
 function aiGeneratorReducer(state: AiGeneratorState, action: AiGeneratorAction): AiGeneratorState {
   switch (action.type) {
-    case 'SET_TEXT': {
+    case "SET_TEXT": {
       const charCount = action.payload.length;
       const isValid = validateText(action.payload);
       return {
@@ -52,14 +52,14 @@ function aiGeneratorReducer(state: AiGeneratorState, action: AiGeneratorAction):
       };
     }
 
-    case 'SET_LANGUAGE': {
+    case "SET_LANGUAGE": {
       return {
         ...state,
         language: action.payload,
       };
     }
 
-    case 'SET_MAX_PROPOSALS': {
+    case "SET_MAX_PROPOSALS": {
       const clamped = Math.max(MIN_PROPOSALS, Math.min(MAX_PROPOSALS, action.payload));
       return {
         ...state,
@@ -67,7 +67,7 @@ function aiGeneratorReducer(state: AiGeneratorState, action: AiGeneratorAction):
       };
     }
 
-    case 'GENERATE_START': {
+    case "GENERATE_START": {
       return {
         ...state,
         isGenerating: true,
@@ -75,12 +75,12 @@ function aiGeneratorReducer(state: AiGeneratorState, action: AiGeneratorAction):
       };
     }
 
-    case 'GENERATE_SUCCESS': {
+    case "GENERATE_SUCCESS": {
       const proposals: ProposalVM[] = action.payload.proposals.map((p, idx) => ({
         id: `proposal-${Date.now()}-${idx}`,
         front_text: p.front_text,
         back_text: p.back_text,
-        status: 'pending' as const,
+        status: "pending" as const,
         revealed: false,
       }));
 
@@ -98,7 +98,7 @@ function aiGeneratorReducer(state: AiGeneratorState, action: AiGeneratorAction):
       };
     }
 
-    case 'GENERATE_FAILURE': {
+    case "GENERATE_FAILURE": {
       return {
         ...state,
         isGenerating: false,
@@ -106,11 +106,9 @@ function aiGeneratorReducer(state: AiGeneratorState, action: AiGeneratorAction):
       };
     }
 
-    case 'ACCEPT_ONE': {
+    case "ACCEPT_ONE": {
       const proposals = state.proposals.map((p) =>
-        p.id === action.payload && p.status === 'pending'
-          ? { ...p, status: 'accepted' as const }
-          : p
+        p.id === action.payload && p.status === "pending" ? { ...p, status: "accepted" as const } : p
       );
       const counts = calculateCounts(proposals);
 
@@ -123,11 +121,9 @@ function aiGeneratorReducer(state: AiGeneratorState, action: AiGeneratorAction):
       };
     }
 
-    case 'REJECT_ONE': {
+    case "REJECT_ONE": {
       const proposals = state.proposals.map((p) =>
-        p.id === action.payload && p.status === 'pending'
-          ? { ...p, status: 'rejected' as const }
-          : p
+        p.id === action.payload && p.status === "pending" ? { ...p, status: "rejected" as const } : p
       );
       const counts = calculateCounts(proposals);
 
@@ -140,9 +136,9 @@ function aiGeneratorReducer(state: AiGeneratorState, action: AiGeneratorAction):
       };
     }
 
-    case 'BULK_ACCEPT_REMAINING': {
+    case "BULK_ACCEPT_REMAINING": {
       const proposals = state.proposals.map((p) =>
-        p.status === 'pending' ? { ...p, status: 'accepted' as const } : p
+        p.status === "pending" ? { ...p, status: "accepted" as const } : p
       );
       const counts = calculateCounts(proposals);
 
@@ -155,9 +151,9 @@ function aiGeneratorReducer(state: AiGeneratorState, action: AiGeneratorAction):
       };
     }
 
-    case 'BULK_REJECT_REMAINING': {
+    case "BULK_REJECT_REMAINING": {
       const proposals = state.proposals.map((p) =>
-        p.status === 'pending' ? { ...p, status: 'rejected' as const } : p
+        p.status === "pending" ? { ...p, status: "rejected" as const } : p
       );
       const counts = calculateCounts(proposals);
 
@@ -170,10 +166,8 @@ function aiGeneratorReducer(state: AiGeneratorState, action: AiGeneratorAction):
       };
     }
 
-    case 'TOGGLE_REVEAL': {
-      const proposals = state.proposals.map((p) =>
-        p.id === action.payload ? { ...p, revealed: !p.revealed } : p
-      );
+    case "TOGGLE_REVEAL": {
+      const proposals = state.proposals.map((p) => (p.id === action.payload ? { ...p, revealed: !p.revealed } : p));
 
       return {
         ...state,
@@ -181,7 +175,7 @@ function aiGeneratorReducer(state: AiGeneratorState, action: AiGeneratorAction):
       };
     }
 
-    case 'SAVE_START': {
+    case "SAVE_START": {
       return {
         ...state,
         isSaving: true,
@@ -189,7 +183,7 @@ function aiGeneratorReducer(state: AiGeneratorState, action: AiGeneratorAction):
       };
     }
 
-    case 'SAVE_SUCCESS': {
+    case "SAVE_SUCCESS": {
       return {
         ...state,
         isSaving: false,
@@ -198,7 +192,7 @@ function aiGeneratorReducer(state: AiGeneratorState, action: AiGeneratorAction):
       };
     }
 
-    case 'SAVE_FAILURE': {
+    case "SAVE_FAILURE": {
       return {
         ...state,
         isSaving: false,
@@ -206,7 +200,7 @@ function aiGeneratorReducer(state: AiGeneratorState, action: AiGeneratorAction):
       };
     }
 
-    case 'RESET': {
+    case "RESET": {
       return createInitialState();
     }
 
@@ -219,66 +213,66 @@ export function useAiGenerator() {
   const [state, dispatch] = useReducer(aiGeneratorReducer, undefined, createInitialState);
 
   const setText = useCallback((text: string) => {
-    dispatch({ type: 'SET_TEXT', payload: text });
+    dispatch({ type: "SET_TEXT", payload: text });
   }, []);
 
-  const setLanguage = useCallback((language: 'pl' | 'en' | null) => {
-    dispatch({ type: 'SET_LANGUAGE', payload: language });
+  const setLanguage = useCallback((language: "pl" | "en" | null) => {
+    dispatch({ type: "SET_LANGUAGE", payload: language });
   }, []);
 
   const setMaxProposals = useCallback((max: number) => {
-    dispatch({ type: 'SET_MAX_PROPOSALS', payload: max });
+    dispatch({ type: "SET_MAX_PROPOSALS", payload: max });
   }, []);
 
   const generateStart = useCallback(() => {
-    dispatch({ type: 'GENERATE_START' });
+    dispatch({ type: "GENERATE_START" });
   }, []);
 
   const generateSuccess = useCallback(
-    (session: AiGeneratorState['session'], proposals: Array<{ front_text: string; back_text: string }>) => {
-      dispatch({ type: 'GENERATE_SUCCESS', payload: { session, proposals } });
+    (session: AiGeneratorState["session"], proposals: { front_text: string; back_text: string }[]) => {
+      dispatch({ type: "GENERATE_SUCCESS", payload: { session, proposals } });
     },
     []
   );
 
   const generateFailure = useCallback((error: string) => {
-    dispatch({ type: 'GENERATE_FAILURE', payload: error });
+    dispatch({ type: "GENERATE_FAILURE", payload: error });
   }, []);
 
   const acceptOne = useCallback((id: string) => {
-    dispatch({ type: 'ACCEPT_ONE', payload: id });
+    dispatch({ type: "ACCEPT_ONE", payload: id });
   }, []);
 
   const rejectOne = useCallback((id: string) => {
-    dispatch({ type: 'REJECT_ONE', payload: id });
+    dispatch({ type: "REJECT_ONE", payload: id });
   }, []);
 
   const bulkAcceptRemaining = useCallback(() => {
-    dispatch({ type: 'BULK_ACCEPT_REMAINING' });
+    dispatch({ type: "BULK_ACCEPT_REMAINING" });
   }, []);
 
   const bulkRejectRemaining = useCallback(() => {
-    dispatch({ type: 'BULK_REJECT_REMAINING' });
+    dispatch({ type: "BULK_REJECT_REMAINING" });
   }, []);
 
   const toggleReveal = useCallback((id: string) => {
-    dispatch({ type: 'TOGGLE_REVEAL', payload: id });
+    dispatch({ type: "TOGGLE_REVEAL", payload: id });
   }, []);
 
   const saveStart = useCallback(() => {
-    dispatch({ type: 'SAVE_START' });
+    dispatch({ type: "SAVE_START" });
   }, []);
 
   const saveSuccess = useCallback(() => {
-    dispatch({ type: 'SAVE_SUCCESS' });
+    dispatch({ type: "SAVE_SUCCESS" });
   }, []);
 
   const saveFailure = useCallback((error: string) => {
-    dispatch({ type: 'SAVE_FAILURE', payload: error });
+    dispatch({ type: "SAVE_FAILURE", payload: error });
   }, []);
 
   const reset = useCallback(() => {
-    dispatch({ type: 'RESET' });
+    dispatch({ type: "RESET" });
   }, []);
 
   return {
@@ -302,4 +296,3 @@ export function useAiGenerator() {
     },
   };
 }
-

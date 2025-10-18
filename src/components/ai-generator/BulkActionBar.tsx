@@ -1,13 +1,13 @@
-import { CheckCheck, XCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { CheckCheck, XCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-type BulkActionBarProps = {
+interface BulkActionBarProps {
   pendingCount: number;
   acceptedCount: number;
   rejectedCount: number;
   onBulkAccept: () => void;
   onBulkReject: () => void;
-};
+}
 
 export function BulkActionBar({
   pendingCount,
@@ -24,7 +24,7 @@ export function BulkActionBar({
         <div className="flex items-center gap-2">
           <span className="font-medium">Status propozycji:</span>
         </div>
-        
+
         <div className="flex items-center gap-1.5">
           <div className="size-3 rounded-full bg-yellow-500" aria-hidden="true" />
           <span className="text-muted-foreground">
@@ -75,4 +75,3 @@ export function BulkActionBar({
     </div>
   );
 }
-

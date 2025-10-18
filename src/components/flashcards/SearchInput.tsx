@@ -1,19 +1,14 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { useDebouncedValue } from '../hooks/useDebouncedValue';
-import type { SearchInputProps } from '../types/flashcards.types';
+import { useState, useEffect, useCallback, useRef } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useDebouncedValue } from "../hooks/useDebouncedValue";
+import type { SearchInputProps } from "../types/flashcards.types";
 
 /**
  * Search input with debounce for flashcards filtering
  * Searches in front_text and back_text fields
  */
-export function SearchInput({
-  value,
-  onChange,
-  debounceMs = 300,
-  disabled = false,
-}: SearchInputProps) {
+export function SearchInput({ value, onChange, debounceMs = 300, disabled = false }: SearchInputProps) {
   const [localValue, setLocalValue] = useState(value);
   const debouncedValue = useDebouncedValue(localValue, debounceMs);
   const skipDebounceRef = useRef(false);
@@ -36,13 +31,16 @@ export function SearchInput({
     setLocalValue(value);
   }, [value]);
 
-  const handleClear = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    skipDebounceRef.current = true;
-    setLocalValue('');
-    onChange('');
-  }, [onChange]);
+  const handleClear = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      skipDebounceRef.current = true;
+      setLocalValue("");
+      onChange("");
+    },
+    [onChange]
+  );
 
   return (
     <div className="relative flex items-center gap-2">
@@ -62,7 +60,7 @@ export function SearchInput({
             d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
           />
         </svg>
-        
+
         <Input
           type="text"
           value={localValue}
@@ -91,11 +89,7 @@ export function SearchInput({
               strokeWidth={2}
               stroke="currentColor"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </Button>
         )}
@@ -103,4 +97,3 @@ export function SearchInput({
     </div>
   );
 }
-

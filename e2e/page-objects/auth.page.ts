@@ -1,4 +1,4 @@
-import { type Page, type Locator } from '@playwright/test';
+import { type Page, type Locator } from "@playwright/test";
 
 /**
  * Page Object Model for authentication pages
@@ -6,14 +6,14 @@ import { type Page, type Locator } from '@playwright/test';
  */
 export class AuthPage {
   readonly page: Page;
-  
+
   // Register form elements
   readonly registerEmailInput: Locator;
   readonly registerPasswordInput: Locator;
   readonly registerConfirmPasswordInput: Locator;
   readonly registerSubmitButton: Locator;
   readonly registerFormError: Locator;
-  
+
   // Login form elements
   readonly loginEmailInput: Locator;
   readonly loginPasswordInput: Locator;
@@ -28,14 +28,14 @@ export class AuthPage {
 
   constructor(page: Page) {
     this.page = page;
-    
+
     // Register form selectors (based on RegisterForm.tsx structure)
     this.registerEmailInput = page.locator('input[name="email"][type="email"]');
     this.registerPasswordInput = page.locator('input[name="password"][type="password"]');
     this.registerConfirmPasswordInput = page.locator('input[name="confirmPassword"][type="password"]');
     this.registerSubmitButton = page.locator('button[type="submit"]');
     this.registerFormError = page.locator('[role="alert"]');
-    
+
     // Login form selectors (based on LoginForm.tsx structure)
     this.loginEmailInput = page.locator('input[name="email"][type="email"]');
     this.loginPasswordInput = page.locator('input[name="password"][type="password"]');
@@ -53,16 +53,16 @@ export class AuthPage {
    * Navigate to registration page
    */
   async gotoRegister() {
-    await this.page.goto('/auth/register');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.goto("/auth/register");
+    await this.page.waitForLoadState("networkidle");
   }
 
   /**
    * Navigate to login page
    */
   async gotoLogin() {
-    await this.page.goto('/auth/login');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.goto("/auth/login");
+    await this.page.waitForLoadState("networkidle");
   }
 
   /**
@@ -79,7 +79,7 @@ export class AuthPage {
     // Wait for React hydration by triggering form submit via JavaScript
     // This ensures the React event handlers are attached
     await this.page.evaluate(() => {
-      const form = document.querySelector('form');
+      const form = document.querySelector("form");
       if (form) {
         form.requestSubmit();
       }
@@ -98,7 +98,7 @@ export class AuthPage {
     // Wait for React hydration by triggering form submit via JavaScript
     // This ensures the React event handlers are attached
     await this.page.evaluate(() => {
-      const form = document.querySelector('form');
+      const form = document.querySelector("form");
       if (form) {
         form.requestSubmit();
       }
@@ -109,7 +109,7 @@ export class AuthPage {
    * Wait for successful registration redirect
    * Default redirect is to /app/generate
    */
-  async waitForRegisterSuccess(expectedUrl = '/app/generate') {
+  async waitForRegisterSuccess(expectedUrl = "/app/generate") {
     await this.page.waitForURL(`**${expectedUrl}`, { timeout: 10000 });
   }
 
@@ -117,7 +117,7 @@ export class AuthPage {
    * Wait for successful login redirect
    * Default redirect is to /app/generate
    */
-  async waitForLoginSuccess(expectedUrl = '/app/generate') {
+  async waitForLoginSuccess(expectedUrl = "/app/generate") {
     await this.page.waitForURL(`**${expectedUrl}`, { timeout: 10000 });
   }
 
@@ -125,8 +125,8 @@ export class AuthPage {
    * Navigate to delete account page
    */
   async gotoDeleteAccount() {
-    await this.page.goto('/auth/delete-account');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.goto("/auth/delete-account");
+    await this.page.waitForLoadState("networkidle");
   }
 
   /**
@@ -134,14 +134,14 @@ export class AuthPage {
    */
   async clickDeleteAccountLink() {
     await this.deleteAccountLink.click();
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState("networkidle");
   }
 
   /**
    * Delete account by typing confirmation and submitting
    * @param confirmation - Confirmation text (default: 'USUŃ')
    */
-  async deleteAccount(confirmation = 'USUŃ') {
+  async deleteAccount(confirmation = "USUŃ") {
     await this.deleteAccountConfirmInput.fill(confirmation);
     await this.deleteAccountSubmitButton.click();
   }
@@ -150,7 +150,7 @@ export class AuthPage {
    * Wait for successful account deletion redirect
    * Default redirect is to home page
    */
-  async waitForDeleteSuccess(expectedUrl = '/') {
+  async waitForDeleteSuccess(expectedUrl = "/") {
     await this.page.waitForURL(`**${expectedUrl}`, { timeout: 10000 });
   }
 
@@ -163,7 +163,7 @@ export class AuthPage {
   async expectLoginFailure(email: string, password: string): Promise<boolean> {
     await this.login(email, password);
     // Wait for error message to appear
-    await this.loginFormError.waitFor({ state: 'visible', timeout: 5000 });
+    await this.loginFormError.waitFor({ state: "visible", timeout: 5000 });
     return await this.loginFormError.isVisible();
   }
 
@@ -172,8 +172,7 @@ export class AuthPage {
    * @param prefix - Email prefix (default: 'test')
    * @returns Email in format: prefix+timestamp@e2etest.com
    */
-  static generateTestEmail(prefix = 'test'): string {
+  static generateTestEmail(prefix = "test"): string {
     return `${prefix}+${Date.now()}@e2etest.com`;
   }
 }
-

@@ -1,17 +1,13 @@
-import { Save, Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Save, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-type SaveSelectedBarProps = {
+interface SaveSelectedBarProps {
   acceptedCount: number;
   isSaving: boolean;
   onSave: () => void;
-};
+}
 
-export function SaveSelectedBar({
-  acceptedCount,
-  isSaving,
-  onSave,
-}: SaveSelectedBarProps) {
+export function SaveSelectedBar({ acceptedCount, isSaving, onSave }: SaveSelectedBarProps) {
   const canSave = acceptedCount > 0 && !isSaving;
 
   return (
@@ -22,9 +18,9 @@ export function SaveSelectedBar({
             <span>Zaakceptuj propozycje, aby je zapisać</span>
           ) : (
             <span>
-              Gotowe do zapisania:{' '}
+              Gotowe do zapisania:{" "}
               <span className="font-semibold text-foreground">
-                {acceptedCount} {acceptedCount === 1 ? 'fiszka' : acceptedCount < 5 ? 'fiszki' : 'fiszek'}
+                {acceptedCount} {acceptedCount === 1 ? "fiszka" : acceptedCount < 5 ? "fiszki" : "fiszek"}
               </span>
             </span>
           )}
@@ -53,4 +49,3 @@ export function SaveSelectedBar({
     </div>
   );
 }
-

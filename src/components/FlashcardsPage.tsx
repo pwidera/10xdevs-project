@@ -1,10 +1,10 @@
-import { useCallback } from 'react';
-import { Button } from '@/components/ui/button';
-import { FlashcardsToolbar } from './flashcards/FlashcardsToolbar';
-import { FlashcardsList } from './flashcards/FlashcardsList';
-import { Pagination } from './flashcards/Pagination';
-import { useUrlFilters } from './hooks/useUrlFilters';
-import { useFlashcardsQuery } from './hooks/useFlashcardsQuery';
+import { useCallback } from "react";
+import { Button } from "@/components/ui/button";
+import { FlashcardsToolbar } from "./flashcards/FlashcardsToolbar";
+import { FlashcardsList } from "./flashcards/FlashcardsList";
+import { Pagination } from "./flashcards/Pagination";
+import { useUrlFilters } from "./hooks/useUrlFilters";
+import { useFlashcardsQuery } from "./hooks/useFlashcardsQuery";
 
 /**
  * Main flashcards page component
@@ -12,8 +12,7 @@ import { useFlashcardsQuery } from './hooks/useFlashcardsQuery';
  */
 export default function FlashcardsPage() {
   const { filters, updateFilters } = useUrlFilters();
-  const { items, page, page_size, total, isLoading, error, updateItem, removeItem } =
-    useFlashcardsQuery(filters);
+  const { items, page, page_size, total, isLoading, error, updateItem, removeItem } = useFlashcardsQuery(filters);
 
   // Handle page change
   const handlePageChange = useCallback(
@@ -33,7 +32,7 @@ export default function FlashcardsPage() {
 
   // Navigate to create page
   const handleCreateClick = () => {
-    window.location.href = '/app/flashcards/new';
+    window.location.href = "/app/flashcards/new";
   };
 
   return (
@@ -56,29 +55,17 @@ export default function FlashcardsPage() {
             Dodaj fiszkę
           </Button>
         </div>
-        <p className="text-muted-foreground">
-          Przeglądaj, edytuj i zarządzaj swoimi fiszkami
-        </p>
+        <p className="text-muted-foreground">Przeglądaj, edytuj i zarządzaj swoimi fiszkami</p>
       </div>
 
       {/* Toolbar - filters and sorting */}
       <div className="mb-6">
-        <FlashcardsToolbar
-          filters={filters}
-          onFiltersChange={updateFilters}
-          disabled={isLoading}
-        />
+        <FlashcardsToolbar filters={filters} onFiltersChange={updateFilters} disabled={isLoading} />
       </div>
 
       {/* Flashcards list */}
       <div className="mb-6">
-        <FlashcardsList
-          items={items}
-          isLoading={isLoading}
-          error={error}
-          onUpdate={updateItem}
-          onRemove={removeItem}
-        />
+        <FlashcardsList items={items} isLoading={isLoading} error={error} onUpdate={updateItem} onRemove={removeItem} />
       </div>
 
       {/* Pagination */}
@@ -94,4 +81,3 @@ export default function FlashcardsPage() {
     </div>
   );
 }
-
