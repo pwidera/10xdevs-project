@@ -1,23 +1,25 @@
-import React from 'react';
-import { loginSchema } from '@/lib/validation/auth.schemas';
-import { post } from '@/lib/services/http';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import React from "react";
+import { loginSchema } from "@/lib/validation/auth.schemas";
+import { post } from "@/lib/services/http";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 export function LoginForm() {
-  const [values, setValues] = React.useState({ email: '', password: '' });
-  const [errors, setErrors] = React.useState<Partial<Record<keyof typeof values | 'form', string>>>({});
+  const [values, setValues] = React.useState({ email: "", password: "" });
+  const [errors, setErrors] = React.useState<Partial<Record<keyof typeof values | "form", string>>>({});
   const [loading, setLoading] = React.useState(false);
   const nextRef = React.useRef<string | undefined>(undefined);
 
   React.useEffect(() => {
     try {
       const params = new URLSearchParams(window.location.search);
-      const next = params.get('next') || undefined;
+      const next = params.get("next") || undefined;
       nextRef.current = next || undefined;
-    } catch {}
+    } catch {
+      // Ignore URL parsing errors
+    }
   }, []);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,7 +29,7 @@ export function LoginForm() {
   const validate = () => {
     const result = loginSchema.safeParse(values);
     if (!result.success) {
-      const fieldErrors: any = {};
+      const fieldErrors: Record<string, string> = {};
       for (const issue of result.error.issues) {
         const name = issue.path[0] as keyof typeof values;
         if (!fieldErrors[name]) fieldErrors[name] = issue.message;
@@ -44,18 +46,19 @@ export function LoginForm() {
     if (!validate()) return;
     setLoading(true);
     try {
-      const res = await post<{ redirect?: string }>('/api/auth/login', { ...values, next: nextRef.current });
+      const res = await post<{ redirect?: string }>("/api/auth/login", { ...values, next: nextRef.current });
       if (res.ok) {
-        const to = (res.redirect as string) || '/app/generate';
+        const to = (res.redirect as string) || "/app/generate";
         window.location.assign(to);
         return;
       }
       // Map common backend codes to friendly messages
-      const code = res.code || 'UNKNOWN_ERROR';
-      const message = code === 'UNAUTHORIZED' ? 'Nieprawidłowy e‑mail lub hasło' : (res.message || 'Wystąpił błąd. Spróbuj ponownie.');
+      const code = res.code || "UNKNOWN_ERROR";
+      const message =
+        code === "UNAUTHORIZED" ? "Nieprawidłowy e‑mail lub hasło" : res.message || "Wystąpił błąd. Spróbuj ponownie.";
       setErrors({ form: message });
-    } catch (err) {
-      setErrors({ form: 'Wystąpił błąd sieci. Spróbuj ponownie.' });
+    } catch {
+      setErrors({ form: "Wystąpił błąd sieci. Spróbuj ponownie." });
     } finally {
       setLoading(false);
     }
@@ -70,26 +73,63 @@ export function LoginForm() {
       <CardContent>
         <form onSubmit={onSubmit} className="space-y-4" noValidate>
           {errors.form && (
-            <div role="alert" className="text-sm text-red-600">{errors.form}</div>
+            <div role="alert" className="text-sm text-red-600">
+              {errors.form}
+            </div>
           )}
           <div className="space-y-2">
             <Label htmlFor="email">E‑mail</Label>
-            <Input id="email" name="email" type="email" autoComplete="email" value={values.email} onChange={onChange} onBlur={validate} disabled={loading} required aria-invalid={!!errors.email} aria-describedby={errors.email ? 'email-error' : undefined} />
-            {errors.email && <p id="email-error" className="text-xs text-red-600">{errors.email}</p>}
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              value={values.email}
+              onChange={onChange}
+              onBlur={validate}
+              disabled={loading}
+              required
+              aria-invalid={!!errors.email}
+              aria-describedby={errors.email ? "email-error" : undefined}
+            />
+            {errors.email && (
+              <p id="email-error" className="text-xs text-red-600">
+                {errors.email}
+              </p>
+            )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Hasło</Label>
-            <Input id="password" name="password" type="password" autoComplete="current-password" value={values.password} onChange={onChange} onBlur={validate} disabled={loading} required aria-invalid={!!errors.password} aria-describedby={errors.password ? 'password-error' : undefined} />
-            {errors.password && <p id="password-error" className="text-xs text-red-600">{errors.password}</p>}
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              autoComplete="current-password"
+              value={values.password}
+              onChange={onChange}
+              onBlur={validate}
+              disabled={loading}
+              required
+              aria-invalid={!!errors.password}
+              aria-describedby={errors.password ? "password-error" : undefined}
+            />
+            {errors.password && (
+              <p id="password-error" className="text-xs text-red-600">
+                {errors.password}
+              </p>
+            )}
           </div>
           <div className="flex justify-end -mt-1">
-            <a href="/auth/forgot-password" className="text-sm text-blue-600 hover:underline">Nie pamiętasz hasła?</a>
+            <a href="/auth/forgot-password" className="text-sm text-blue-600 hover:underline">
+              Nie pamiętasz hasła?
+            </a>
           </div>
 
-          <Button type="submit" disabled={loading} className="w-full">{loading ? 'Logowanie…' : 'Zaloguj się'}</Button>
+          <Button type="submit" disabled={loading} className="w-full">
+            {loading ? "Logowanie…" : "Zaloguj się"}
+          </Button>
         </form>
       </CardContent>
     </Card>
   );
 }
-

@@ -1,23 +1,15 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { OriginBadge } from './OriginBadge';
-import {
-  FLASHCARD_TEXT_MIN_LENGTH,
-  FLASHCARD_TEXT_MAX_LENGTH,
-} from '../types/flashcards.types';
-import type { FlashcardRowProps } from '../types/flashcards.types';
+import { useState, useCallback, useRef, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { OriginBadge } from "./OriginBadge";
+import { FLASHCARD_TEXT_MIN_LENGTH, FLASHCARD_TEXT_MAX_LENGTH } from "../types/flashcards.types";
+import type { FlashcardRowProps } from "../types/flashcards.types";
 
 /**
  * Single flashcard row with inline editing
  * Supports view/edit modes, keyboard shortcuts (Enter/Esc)
  */
-export function FlashcardRow({
-  flashcard,
-  onEdit,
-  onDelete,
-  disabled = false,
-}: FlashcardRowProps) {
+export function FlashcardRow({ flashcard, onEdit, onDelete, disabled = false }: FlashcardRowProps) {
   const [isEditing, setIsEditing] = useState(flashcard.isEditing);
   const [draftFront, setDraftFront] = useState(flashcard.draftFront);
   const [draftBack, setDraftBack] = useState(flashcard.draftBack);
@@ -29,15 +21,15 @@ export function FlashcardRow({
   // Validate field
   const validateField = useCallback((value: string): string | undefined => {
     const trimmed = value.trim();
-    
+
     if (trimmed.length < FLASHCARD_TEXT_MIN_LENGTH) {
-      return 'Pole nie może być puste.';
+      return "Pole nie może być puste.";
     }
-    
+
     if (trimmed.length > FLASHCARD_TEXT_MAX_LENGTH) {
       return `Maksymalnie ${FLASHCARD_TEXT_MAX_LENGTH} znaków.`;
     }
-    
+
     return undefined;
   }, []);
 
@@ -97,10 +89,10 @@ export function FlashcardRow({
   // Keyboard shortcuts
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         e.preventDefault();
         handleCancel();
-      } else if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+      } else if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
         e.preventDefault();
         handleSave();
       }
@@ -130,26 +122,16 @@ export function FlashcardRow({
   if (isEditing) {
     // Edit mode
     return (
+      // eslint-disable-next-line jsx-a11y/no-static-element-interactions
       <div className="rounded-lg border bg-card p-4 space-y-4" onKeyDown={handleKeyDown}>
         <div className="flex items-center justify-between">
           <OriginBadge origin={flashcard.origin} />
           <div className="flex items-center gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={handleCancel}
-              disabled={isDisabled}
-            >
+            <Button type="button" variant="outline" size="sm" onClick={handleCancel} disabled={isDisabled}>
               Anuluj
             </Button>
-            <Button
-              type="button"
-              size="sm"
-              onClick={handleSave}
-              disabled={isDisabled || !isValid}
-            >
-              {isSaving ? 'Zapisywanie...' : 'Zapisz'}
+            <Button type="button" size="sm" onClick={handleSave} disabled={isDisabled || !isValid}>
+              {isSaving ? "Zapisywanie..." : "Zapisz"}
             </Button>
           </div>
         </div>
@@ -160,9 +142,7 @@ export function FlashcardRow({
               <span className="text-sm font-medium">Przód</span>
               <span
                 className={`text-xs ${
-                  frontCount > FLASHCARD_TEXT_MAX_LENGTH
-                    ? 'text-destructive'
-                    : 'text-muted-foreground'
+                  frontCount > FLASHCARD_TEXT_MAX_LENGTH ? "text-destructive" : "text-muted-foreground"
                 }`}
               >
                 {frontCount} / {FLASHCARD_TEXT_MAX_LENGTH}
@@ -176,7 +156,7 @@ export function FlashcardRow({
                 if (errors.front) setErrors((prev) => ({ ...prev, front: undefined }));
               }}
               disabled={isDisabled}
-              className={`min-h-[80px] resize-y ${errors.front ? 'border-destructive' : ''}`}
+              className={`min-h-[80px] resize-y ${errors.front ? "border-destructive" : ""}`}
               aria-invalid={!!errors.front}
             />
             {errors.front && <p className="text-xs text-destructive">{errors.front}</p>}
@@ -187,9 +167,7 @@ export function FlashcardRow({
               <span className="text-sm font-medium">Tył</span>
               <span
                 className={`text-xs ${
-                  backCount > FLASHCARD_TEXT_MAX_LENGTH
-                    ? 'text-destructive'
-                    : 'text-muted-foreground'
+                  backCount > FLASHCARD_TEXT_MAX_LENGTH ? "text-destructive" : "text-muted-foreground"
                 }`}
               >
                 {backCount} / {FLASHCARD_TEXT_MAX_LENGTH}
@@ -203,7 +181,7 @@ export function FlashcardRow({
                 if (errors.back) setErrors((prev) => ({ ...prev, back: undefined }));
               }}
               disabled={isDisabled}
-              className={`min-h-[80px] resize-y ${errors.back ? 'border-destructive' : ''}`}
+              className={`min-h-[80px] resize-y ${errors.back ? "border-destructive" : ""}`}
               aria-invalid={!!errors.back}
             />
             {errors.back && <p className="text-xs text-destructive">{errors.back}</p>}
@@ -211,7 +189,7 @@ export function FlashcardRow({
         </div>
 
         <p className="text-xs text-muted-foreground">
-          Skróty: <kbd className="px-1 py-0.5 bg-muted rounded">Esc</kbd> anuluj,{' '}
+          Skróty: <kbd className="px-1 py-0.5 bg-muted rounded">Esc</kbd> anuluj,{" "}
           <kbd className="px-1 py-0.5 bg-muted rounded">Ctrl+Enter</kbd> zapisz
         </p>
       </div>
@@ -224,22 +202,10 @@ export function FlashcardRow({
       <div className="flex items-center justify-between">
         <OriginBadge origin={flashcard.origin} />
         <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={handleEditClick}
-            disabled={isDisabled}
-          >
+          <Button type="button" variant="outline" size="sm" onClick={handleEditClick} disabled={isDisabled}>
             Edytuj
           </Button>
-          <Button
-            type="button"
-            variant="destructive"
-            size="sm"
-            onClick={handleDelete}
-            disabled={isDisabled}
-          >
+          <Button type="button" variant="destructive" size="sm" onClick={handleDelete} disabled={isDisabled}>
             Usuń
           </Button>
         </div>
@@ -258,10 +224,9 @@ export function FlashcardRow({
 
       {flashcard.last_reviewed_at && (
         <p className="text-xs text-muted-foreground">
-          Ostatnio przeglądane: {new Date(flashcard.last_reviewed_at).toLocaleDateString('pl-PL')}
+          Ostatnio przeglądane: {new Date(flashcard.last_reviewed_at).toLocaleDateString("pl-PL")}
         </p>
       )}
     </div>
   );
 }
-

@@ -1,23 +1,16 @@
-import { useState, useCallback } from 'react';
-import { FlashcardRow } from './FlashcardRow';
-import { ConfirmDialog } from './ConfirmDialog';
-import { Alert } from '@/components/ui/alert';
-import * as flashcardsApi from '@/lib/api/flashcards.api';
-import { toast } from 'sonner';
-import type { FlashcardsListProps } from '../types/flashcards.types';
+import { useState, useCallback } from "react";
+import { FlashcardRow } from "./FlashcardRow";
+import { ConfirmDialog } from "./ConfirmDialog";
+import { Alert } from "@/components/ui/alert";
+import * as flashcardsApi from "@/lib/api/flashcards.api";
+import { toast } from "sonner";
+import type { FlashcardsListProps } from "../types/flashcards.types";
 
 /**
  * List of flashcards with loading, empty, and error states
  * Handles edit and delete operations
  */
-export function FlashcardsList({
-  items,
-  isLoading,
-  error,
-  onUpdate,
-  onRemove,
-  disabled = false,
-}: FlashcardsListProps) {
+export function FlashcardsList({ items, isLoading, error, onUpdate, onRemove, disabled = false }: FlashcardsListProps) {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
@@ -43,10 +36,10 @@ export function FlashcardsList({
           isEditing: false,
         });
 
-        toast.success('Fiszka została zaktualizowana');
+        toast.success("Fiszka została zaktualizowana");
       } catch (error) {
-        console.error('Failed to update flashcard:', error);
-        
+        console.error("Failed to update flashcard:", error);
+
         const errorMessage = flashcardsApi.getErrorMessage(error);
         toast.error(errorMessage);
 
@@ -72,10 +65,10 @@ export function FlashcardsList({
       await flashcardsApi.deleteFlashcard(deleteId);
 
       onRemove(deleteId);
-      toast.success('Fiszka została usunięta');
+      toast.success("Fiszka została usunięta");
     } catch (error) {
-      console.error('Failed to delete flashcard:', error);
-      
+      console.error("Failed to delete flashcard:", error);
+
       const errorMessage = flashcardsApi.getErrorMessage(error);
       toast.error(errorMessage);
     } finally {
@@ -89,10 +82,7 @@ export function FlashcardsList({
     return (
       <div className="space-y-4">
         {[1, 2, 3].map((i) => (
-          <div
-            key={i}
-            className="rounded-lg border bg-card p-4 space-y-3 animate-pulse"
-          >
+          <div key={i} className="rounded-lg border bg-card p-4 space-y-3 animate-pulse">
             <div className="flex items-center justify-between">
               <div className="h-5 w-20 bg-muted rounded" />
               <div className="flex gap-2">
@@ -172,4 +162,3 @@ export function FlashcardsList({
     </>
   );
 }
-

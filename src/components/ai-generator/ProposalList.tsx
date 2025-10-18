@@ -1,19 +1,14 @@
-import { ProposalCard } from './ProposalCard';
-import type { ProposalVM } from '../types/ai-generator.types';
+import { ProposalCard } from "./ProposalCard";
+import type { ProposalVM } from "../types/ai-generator.types";
 
-type ProposalListProps = {
+interface ProposalListProps {
   proposals: ProposalVM[];
   onAccept: (id: string) => void;
   onReject: (id: string) => void;
   onRevealToggle: (id: string) => void;
-};
+}
 
-export function ProposalList({
-  proposals,
-  onAccept,
-  onReject,
-  onRevealToggle,
-}: ProposalListProps) {
+export function ProposalList({ proposals, onAccept, onReject, onRevealToggle }: ProposalListProps) {
   if (proposals.length === 0) {
     return null;
   }
@@ -31,6 +26,7 @@ export function ProposalList({
             onAccept={onAccept}
             onReject={onReject}
             onRevealToggle={onRevealToggle}
+            // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus={index === 0}
           />
         </div>
@@ -38,4 +34,3 @@ export function ProposalList({
     </div>
   );
 }
-

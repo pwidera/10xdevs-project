@@ -1,9 +1,9 @@
-import { useId } from 'react';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { cn } from '@/lib/utils';
+import { useId } from "react";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
-type TextareaWithCounterProps = {
+interface TextareaWithCounterProps {
   value: string;
   onChange: (value: string) => void;
   min?: number;
@@ -11,15 +11,15 @@ type TextareaWithCounterProps = {
   label?: string;
   placeholder?: string;
   disabled?: boolean;
-};
+}
 
 export function TextareaWithCounter({
   value,
   onChange,
   min = 100,
   max = 10000,
-  label = 'Tekst źródłowy',
-  placeholder = 'Wklej tutaj tekst, z którego chcesz wygenerować fiszki...',
+  label = "Tekst źródłowy",
+  placeholder = "Wklej tutaj tekst, z którego chcesz wygenerować fiszki...",
   disabled = false,
 }: TextareaWithCounterProps) {
   const id = useId();
@@ -31,7 +31,7 @@ export function TextareaWithCounter({
   const isTooShort = count > 0 && count < min;
   const isTooLong = count > max;
 
-  let errorMessage = '';
+  let errorMessage = "";
   if (isTooShort) {
     errorMessage = `Tekst jest za krótki. Minimum ${min} znaków (obecnie: ${count}).`;
   } else if (isTooLong) {
@@ -39,14 +39,14 @@ export function TextareaWithCounter({
   }
 
   const counterColor = cn({
-    'text-muted-foreground': !isInvalid,
-    'text-destructive font-medium': isInvalid,
+    "text-muted-foreground": !isInvalid,
+    "text-destructive font-medium": isInvalid,
   });
 
   return (
     <div className="space-y-2">
       <Label htmlFor={id}>{label}</Label>
-      
+
       <Textarea
         id={id}
         name="sourceText"
@@ -55,7 +55,7 @@ export function TextareaWithCounter({
         placeholder={placeholder}
         disabled={disabled}
         aria-invalid={isInvalid}
-        aria-describedby={`${descriptionId} ${isInvalid ? errorId : ''}`}
+        aria-describedby={`${descriptionId} ${isInvalid ? errorId : ""}`}
         className="min-h-32 resize-y"
         rows={8}
       />
@@ -64,23 +64,17 @@ export function TextareaWithCounter({
         <div id={descriptionId} className="text-xs text-muted-foreground">
           Wprowadź tekst o długości {min}–{max} znaków
         </div>
-        
-        <div className={cn('text-xs tabular-nums', counterColor)} aria-live="polite">
+
+        <div className={cn("text-xs tabular-nums", counterColor)} aria-live="polite">
           {count} / {max}
         </div>
       </div>
 
       {isInvalid && (
-        <div
-          id={errorId}
-          className="text-sm text-destructive"
-          role="alert"
-          aria-live="assertive"
-        >
+        <div id={errorId} className="text-sm text-destructive" role="alert" aria-live="assertive">
           {errorMessage}
         </div>
       )}
     </div>
   );
 }
-

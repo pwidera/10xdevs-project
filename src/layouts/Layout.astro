@@ -37,19 +37,31 @@ const isAuthenticated = !!Astro.locals?.user;
           <a href="/" class="font-semibold">10xFlashAI</a>
         </div>
         <nav class="flex items-center gap-3">
-          {Astro.locals?.user ? (
-            <>
-              <span class="text-sm text-muted-foreground">{Astro.locals.user.email}</span>
-              <a href="/auth/change-password" class="text-sm">Zmień hasło</a>
-              <a href="/auth/delete-account" class="text-sm">Usuń konto</a>
-              <a href="#" id="logout-link" class="text-sm">Wyloguj</a>
-            </>
-          ) : (
-            <>
-              <a href="/auth/login" class="text-sm">Zaloguj</a>
-              <a href="/auth/register" class="text-sm">Zarejestruj</a>
-            </>
-          )}
+          {
+            Astro.locals?.user ? (
+              <>
+                <span class="text-sm text-muted-foreground">{Astro.locals.user.email}</span>
+                <a href="/auth/change-password" class="text-sm">
+                  Zmień hasło
+                </a>
+                <a href="/auth/delete-account" class="text-sm">
+                  Usuń konto
+                </a>
+                <a href="#" id="logout-link" class="text-sm">
+                  Wyloguj
+                </a>
+              </>
+            ) : (
+              <>
+                <a href="/auth/login" class="text-sm">
+                  Zaloguj
+                </a>
+                <a href="/auth/register" class="text-sm">
+                  Zarejestruj
+                </a>
+              </>
+            )
+          }
           <ThemeToggle client:load />
         </nav>
       </div>
@@ -58,22 +70,23 @@ const isAuthenticated = !!Astro.locals?.user;
       <slot />
     </main>
   </body>
-    <script>
-      const link = document.getElementById('logout-link');
-      if (link) {
-        link.addEventListener('click', async (e) => {
-          e.preventDefault();
-          try {
-            const res = await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' });
-            if (res.ok) {
-              // redirect to home
-              window.location.assign('/');
-            }
-          } catch {}
-        });
-      }
-    </script>
-
+  <script>
+    const link = document.getElementById("logout-link");
+    if (link) {
+      link.addEventListener("click", async (e) => {
+        e.preventDefault();
+        try {
+          const res = await fetch("/api/auth/logout", { method: "POST", credentials: "same-origin" });
+          if (res.ok) {
+            // redirect to home
+            window.location.assign("/");
+          }
+        } catch {
+          // Ignore errors during logout
+        }
+      });
+    }
+  </script>
 </html>
 
 <style>

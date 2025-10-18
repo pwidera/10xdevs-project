@@ -1,27 +1,17 @@
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { ORIGIN_LABELS } from '../types/flashcards.types';
-import type { SelectOriginProps } from '../types/flashcards.types';
-import type { FlashcardOrigin } from '../../types';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ORIGIN_LABELS } from "../types/flashcards.types";
+import type { SelectOriginProps } from "../types/flashcards.types";
+import type { FlashcardOrigin } from "../../types";
 
-const ORIGIN_OPTIONS: FlashcardOrigin[] = ['manual', 'AI_full', 'AI_edited'];
+const ORIGIN_OPTIONS: FlashcardOrigin[] = ["manual", "AI_full", "AI_edited"];
 
 /**
  * Select component for filtering flashcards by origin
  * Displays: Wszystkie, Ręczne, AI, AI (edytowane)
  */
-export function SelectOrigin({
-  value,
-  onChange,
-  disabled = false,
-}: SelectOriginProps) {
+export function SelectOrigin({ value, onChange, disabled = false }: SelectOriginProps) {
   const handleValueChange = (newValue: string) => {
-    if (newValue === 'all') {
+    if (newValue === "all") {
       onChange(null);
     } else {
       onChange(newValue as FlashcardOrigin);
@@ -29,11 +19,7 @@ export function SelectOrigin({
   };
 
   return (
-    <Select
-      value={value ?? 'all'}
-      onValueChange={handleValueChange}
-      disabled={disabled}
-    >
+    <Select value={value ?? "all"} onValueChange={handleValueChange} disabled={disabled}>
       <SelectTrigger className="w-[180px]" aria-label="Filtruj po pochodzeniu">
         <SelectValue placeholder="Pochodzenie" />
       </SelectTrigger>
@@ -48,4 +34,3 @@ export function SelectOrigin({
     </Select>
   );
 }
-

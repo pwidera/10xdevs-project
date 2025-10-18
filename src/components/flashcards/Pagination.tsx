@@ -1,14 +1,8 @@
-import { useCallback } from 'react';
-import { Button } from '@/components/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { PAGE_SIZE_OPTIONS } from '../types/flashcards.types';
-import type { PaginationProps } from '../types/flashcards.types';
+import { useCallback } from "react";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PAGE_SIZE_OPTIONS } from "../types/flashcards.types";
+import type { PaginationProps } from "../types/flashcards.types";
 
 /**
  * Pagination component for flashcards list
@@ -52,7 +46,7 @@ export function Pagination({
 
   // Generate page numbers to display
   const getPageNumbers = () => {
-    const pages: (number | 'ellipsis')[] = [];
+    const pages: (number | "ellipsis")[] = [];
     const maxVisible = 5;
 
     if (totalPages <= maxVisible) {
@@ -65,7 +59,7 @@ export function Pagination({
       pages.push(1);
 
       if (page > 3) {
-        pages.push('ellipsis');
+        pages.push("ellipsis");
       }
 
       // Show pages around current page
@@ -77,7 +71,7 @@ export function Pagination({
       }
 
       if (page < totalPages - 2) {
-        pages.push('ellipsis');
+        pages.push("ellipsis");
       }
 
       // Always show last page
@@ -100,21 +94,15 @@ export function Pagination({
       {/* Range display */}
       <div className="text-sm text-muted-foreground">
         Wyświetlanie <span className="font-medium text-foreground">{startItem}</span>-
-        <span className="font-medium text-foreground">{endItem}</span> z{' '}
+        <span className="font-medium text-foreground">{endItem}</span> z{" "}
         <span className="font-medium text-foreground">{total}</span>
       </div>
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
         {/* Page size selector */}
         <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground whitespace-nowrap">
-            Wierszy na stronę:
-          </span>
-          <Select
-            value={String(pageSize)}
-            onValueChange={handlePageSizeChange}
-            disabled={disabled}
-          >
+          <span className="text-sm text-muted-foreground whitespace-nowrap">Wierszy na stronę:</span>
+          <Select value={String(pageSize)} onValueChange={handlePageSizeChange} disabled={disabled}>
             <SelectTrigger className="w-[80px]" aria-label="Wybierz liczbę wierszy na stronę">
               <SelectValue />
             </SelectTrigger>
@@ -152,20 +140,20 @@ export function Pagination({
           {/* Page numbers */}
           <div className="flex items-center gap-1">
             {pageNumbers.map((pageNum, idx) =>
-              pageNum === 'ellipsis' ? (
+              pageNum === "ellipsis" ? (
                 <span key={`ellipsis-${idx}`} className="px-2 text-muted-foreground">
                   ...
                 </span>
               ) : (
                 <Button
                   key={pageNum}
-                  variant={pageNum === page ? 'default' : 'outline'}
+                  variant={pageNum === page ? "default" : "outline"}
                   size="sm"
                   onClick={() => onPageChange(pageNum)}
                   disabled={disabled}
                   className="min-w-[36px]"
                   aria-label={`Strona ${pageNum}`}
-                  aria-current={pageNum === page ? 'page' : undefined}
+                  aria-current={pageNum === page ? "page" : undefined}
                 >
                   {pageNum}
                 </Button>
@@ -196,4 +184,3 @@ export function Pagination({
     </div>
   );
 }
-

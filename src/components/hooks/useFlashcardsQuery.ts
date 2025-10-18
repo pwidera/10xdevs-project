@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
-import * as flashcardsApi from '@/lib/api/flashcards.api';
-import type { FlashcardsFiltersVM, FlashcardsListVM, FlashcardRowVM } from '../types/flashcards.types';
-import type { FlashcardDTO } from '../../types';
+import { useState, useEffect, useCallback } from "react";
+import * as flashcardsApi from "@/lib/api/flashcards.api";
+import type { FlashcardsFiltersVM, FlashcardsListVM, FlashcardRowVM } from "../types/flashcards.types";
+import type { FlashcardDTO } from "../../types";
 
 /**
  * Convert FlashcardDTO to FlashcardRowVM with editing state
@@ -58,10 +58,10 @@ export function useFlashcardsQuery(filters: FlashcardsFiltersVM) {
         error: undefined,
       });
     } catch (error) {
-      console.error('Failed to fetch flashcards:', error);
-      
+      console.error("Failed to fetch flashcards:", error);
+
       const errorMessage = flashcardsApi.getErrorMessage(error);
-      
+
       setState((prev) => ({
         ...prev,
         isLoading: false,
@@ -84,9 +84,7 @@ export function useFlashcardsQuery(filters: FlashcardsFiltersVM) {
   const updateItem = useCallback((id: string, updates: Partial<FlashcardRowVM>) => {
     setState((prev) => ({
       ...prev,
-      items: prev.items.map((item) =>
-        item.id === id ? { ...item, ...updates } : item
-      ),
+      items: prev.items.map((item) => (item.id === id ? { ...item, ...updates } : item)),
     }));
   }, []);
 
@@ -106,4 +104,3 @@ export function useFlashcardsQuery(filters: FlashcardsFiltersVM) {
     removeItem,
   };
 }
-

@@ -1,4 +1,4 @@
-import { type Page, type Locator } from '@playwright/test';
+import { type Page, type Locator } from "@playwright/test";
 
 /**
  * Page Object Model for AI flashcard generation page (/app/generate)
@@ -6,14 +6,14 @@ import { type Page, type Locator } from '@playwright/test';
  */
 export class GeneratePage {
   readonly page: Page;
-  
+
   // Source form elements
   readonly sourceTextarea: Locator;
   readonly languageSelect: Locator;
   readonly maxProposalsInput: Locator;
   readonly generateButton: Locator;
   readonly charCounter: Locator;
-  
+
   // Proposals section
   readonly proposalsHeading: Locator;
   readonly bulkAcceptButton: Locator;
@@ -21,38 +21,38 @@ export class GeneratePage {
   readonly saveSelectedButton: Locator;
   readonly acceptedCountBadge: Locator;
   readonly pendingCountBadge: Locator;
-  
+
   // Loading states
   readonly loadingIndicator: Locator;
 
   constructor(page: Page) {
     this.page = page;
-    
+
     // Source form selectors (based on SourceForm.tsx and child components)
     this.sourceTextarea = page.locator('textarea[name="sourceText"]');
     this.languageSelect = page.locator('select[name="language"]');
     this.maxProposalsInput = page.locator('input[name="maxProposals"]');
     this.generateButton = page.locator('button:has-text("Generuj")');
-    this.charCounter = page.locator('text=/\\d+ \\/ 10000/');
-    
+    this.charCounter = page.locator("text=/\\d+ \\/ 10000/");
+
     // Proposals section selectors (based on ProposalsSection.tsx and BulkActionBar.tsx)
     this.proposalsHeading = page.locator('h2:has-text("Propozycje fiszek")');
     this.bulkAcceptButton = page.locator('button:has-text("Zatwierdź pozostałe")');
     this.bulkRejectButton = page.locator('button:has-text("Odrzuć pozostałe")');
     this.saveSelectedButton = page.locator('button:has-text("Zapisz wybrane")');
-    this.acceptedCountBadge = page.locator('text=/Zaakceptowane: \\d+/');
-    this.pendingCountBadge = page.locator('text=/Oczekujące: \\d+/');
-    
+    this.acceptedCountBadge = page.locator("text=/Zaakceptowane: \\d+/");
+    this.pendingCountBadge = page.locator("text=/Oczekujące: \\d+/");
+
     // Loading indicator
-    this.loadingIndicator = page.locator('text=/Generowanie|Zapisywanie/');
+    this.loadingIndicator = page.locator("text=/Generowanie|Zapisywanie/");
   }
 
   /**
    * Navigate to generate page
    */
   async goto() {
-    await this.page.goto('/app/generate');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.goto("/app/generate");
+    await this.page.waitForLoadState("networkidle");
   }
 
   /**
@@ -61,11 +61,7 @@ export class GeneratePage {
    * @param maxProposals - Number of flashcards to generate (default: 5)
    * @param language - Language for generation (default: 'pl')
    */
-  async generateFlashcards(
-    sourceText: string,
-    maxProposals = 5,
-    language: 'pl' | 'en' = 'pl'
-  ) {
+  async generateFlashcards(sourceText: string, maxProposals = 5, language: "pl" | "en" = "pl") {
     // Fill source text
     await this.sourceTextarea.fill(sourceText);
 
@@ -80,7 +76,7 @@ export class GeneratePage {
     // Submit form via JavaScript to ensure React handlers are triggered
     // This works around React hydration timing issues
     await this.page.evaluate(() => {
-      const form = document.querySelector('form');
+      const form = document.querySelector("form");
       if (form) {
         form.requestSubmit();
       }
@@ -93,12 +89,12 @@ export class GeneratePage {
    */
   async waitForGenerationComplete() {
     // Wait for proposals heading to appear
-    await this.proposalsHeading.waitFor({ state: 'visible', timeout: 30000 });
+    await this.proposalsHeading.waitFor({ state: "visible", timeout: 30000 });
 
     // Wait for at least one proposal card to be rendered
     await this.page.locator('[role="article"]').first().waitFor({
-      state: 'visible',
-      timeout: 30000
+      state: "visible",
+      timeout: 30000,
     });
   }
 
@@ -128,7 +124,7 @@ export class GeneratePage {
     const acceptButton = card.locator('button:has-text("Akceptuj")');
 
     // Wait for button to be visible
-    await acceptButton.waitFor({ state: 'visible', timeout: 10000 });
+    await acceptButton.waitFor({ state: "visible", timeout: 10000 });
 
     // Use JavaScript click to work around React hydration issues
     await acceptButton.evaluate((btn: HTMLButtonElement) => btn.click());
@@ -143,7 +139,7 @@ export class GeneratePage {
     const rejectButton = card.locator('button:has-text("Odrzuć")');
 
     // Wait for button to be visible
-    await rejectButton.waitFor({ state: 'visible', timeout: 10000 });
+    await rejectButton.waitFor({ state: "visible", timeout: 10000 });
 
     // Use JavaScript click to work around React hydration issues
     await rejectButton.evaluate((btn: HTMLButtonElement) => btn.click());
@@ -170,8 +166,8 @@ export class GeneratePage {
   async saveAcceptedProposals() {
     await this.saveSelectedButton.click();
     // Wait for save to complete (button should be disabled during save)
-    await this.saveSelectedButton.waitFor({ state: 'visible', timeout: 30000 });
-    await this.page.waitForLoadState('networkidle');
+    await this.saveSelectedButton.waitFor({ state: "visible", timeout: 30000 });
+    await this.page.waitForLoadState("networkidle");
   }
 
   /**
@@ -199,10 +195,9 @@ export class GeneratePage {
    */
   async waitForSaveSuccess() {
     // Based on GeneratePage.tsx - uses sonner toast
-    await this.page.locator('[data-sonner-toast]:has-text("Zapisano")').waitFor({ 
-      state: 'visible', 
-      timeout: 10000 
+    await this.page.locator('[data-sonner-toast]:has-text("Zapisano")').waitFor({
+      state: "visible",
+      timeout: 10000,
     });
   }
 }
-

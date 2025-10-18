@@ -1,6 +1,6 @@
 /**
  * Flashcards API Client (Frontend)
- * 
+ *
  * This module provides type-safe API client methods for the flashcards feature.
  * Used by React components to communicate with backend endpoints.
  */
@@ -13,7 +13,7 @@ import type {
   UpdateFlashcardCommand,
   UpdateFlashcardResponse,
   DeleteFlashcardResponse,
-} from '../../types';
+} from "../../types";
 
 // Import error classes from ai-generator.api.ts
 import {
@@ -24,19 +24,19 @@ import {
   NotFoundError,
   UnprocessableEntityError,
   ServerError,
-} from './ai-generator.api';
+} from "./ai-generator.api";
 
 // ============================================================================
 // HELPER FUNCTIONS
 // ============================================================================
 
 async function handleResponse<T>(response: Response): Promise<T> {
-  const contentType = response.headers.get('content-type');
-  const isJson = contentType?.includes('application/json');
+  const contentType = response.headers.get("content-type");
+  const isJson = contentType?.includes("application/json");
 
   if (!response.ok) {
-    let errorData: any;
-    
+    let errorData: { message?: string; error?: string };
+
     if (isJson) {
       try {
         errorData = await response.json();
@@ -47,7 +47,7 @@ async function handleResponse<T>(response: Response): Promise<T> {
       errorData = { message: response.statusText };
     }
 
-    const message = errorData.message || errorData.error || 'Request failed';
+    const message = errorData.message || errorData.error || "Request failed";
     const details = errorData.details;
 
     switch (response.status) {
@@ -72,20 +72,20 @@ async function handleResponse<T>(response: Response): Promise<T> {
     return await response.json();
   }
 
-  throw new Error('Expected JSON response');
+  throw new Error("Expected JSON response");
 }
 
-function buildQueryString(params: Record<string, any>): string {
+function buildQueryString(params: Record<string, string | number | boolean | undefined | null>): string {
   const searchParams = new URLSearchParams();
-  
+
   Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== '') {
+    if (value !== undefined && value !== null && value !== "") {
       searchParams.append(key, String(value));
     }
   });
-  
+
   const queryString = searchParams.toString();
-  return queryString ? `?${queryString}` : '';
+  return queryString ? `?${queryString}` : "";
 }
 
 // ============================================================================
@@ -94,21 +94,19 @@ function buildQueryString(params: Record<string, any>): string {
 
 /**
  * Get paginated list of flashcards with optional filters
- * 
+ *
  * @param query - Query parameters for filtering and pagination
  * @returns Paginated list of flashcards
  * @throws {ValidationError} When query parameters are invalid
  * @throws {UnauthorizedError} When user is not authenticated
  * @throws {ServerError} When server error occurs
  */
-export async function getFlashcards(
-  query: FlashcardsListQuery = {}
-): Promise<FlashcardsListResponse> {
+export async function getFlashcards(query: FlashcardsListQuery = {}): Promise<FlashcardsListResponse> {
   const queryString = buildQueryString(query);
-  
+
   const response = await fetch(`/api/flashcards${queryString}`, {
-    method: 'GET',
-    credentials: 'same-origin',
+    method: "GET",
+    credentials: "same-origin",
   });
 
   return handleResponse<FlashcardsListResponse>(response);
@@ -116,23 +114,21 @@ export async function getFlashcards(
 
 /**
  * Create a new flashcard manually
- * 
+ *
  * @param command - Flashcard data
  * @returns Created flashcard(s)
  * @throws {ValidationError} When input validation fails
  * @throws {UnauthorizedError} When user is not authenticated
  * @throws {ServerError} When server error occurs
  */
-export async function createFlashcard(
-  command: CreateFlashcardCommand
-): Promise<CreateFlashcardsResponse> {
-  const response = await fetch('/api/flashcards', {
-    method: 'POST',
+export async function createFlashcard(command: CreateFlashcardCommand): Promise<CreateFlashcardsResponse> {
+  const response = await fetch("/api/flashcards", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(command),
-    credentials: 'same-origin',
+    credentials: "same-origin",
   });
 
   return handleResponse<CreateFlashcardsResponse>(response);
@@ -140,7 +136,7 @@ export async function createFlashcard(
 
 /**
  * Update an existing flashcard
- * 
+ *
  * @param id - Flashcard ID
  * @param command - Update data
  * @returns Updated flashcard
@@ -150,17 +146,14 @@ export async function createFlashcard(
  * @throws {NotFoundError} When flashcard doesn't exist
  * @throws {ServerError} When server error occurs
  */
-export async function updateFlashcard(
-  id: string,
-  command: UpdateFlashcardCommand
-): Promise<UpdateFlashcardResponse> {
+export async function updateFlashcard(id: string, command: UpdateFlashcardCommand): Promise<UpdateFlashcardResponse> {
   const response = await fetch(`/api/flashcards/${id}`, {
-    method: 'PUT',
+    method: "PUT",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(command),
-    credentials: 'same-origin',
+    credentials: "same-origin",
   });
 
   return handleResponse<UpdateFlashcardResponse>(response);
@@ -168,7 +161,7 @@ export async function updateFlashcard(
 
 /**
  * Delete a flashcard
- * 
+ *
  * @param id - Flashcard ID
  * @returns Deletion confirmation
  * @throws {UnauthorizedError} When user is not authenticated
@@ -176,12 +169,10 @@ export async function updateFlashcard(
  * @throws {NotFoundError} When flashcard doesn't exist
  * @throws {ServerError} When server error occurs
  */
-export async function deleteFlashcard(
-  id: string
-): Promise<DeleteFlashcardResponse> {
+export async function deleteFlashcard(id: string): Promise<DeleteFlashcardResponse> {
   const response = await fetch(`/api/flashcards/${id}`, {
-    method: 'DELETE',
-    credentials: 'same-origin',
+    method: "DELETE",
+    credentials: "same-origin",
   });
 
   return handleResponse<DeleteFlashcardResponse>(response);
@@ -193,43 +184,42 @@ export async function deleteFlashcard(
 
 /**
  * Get user-friendly error message for display
- * 
+ *
  * @param error - Error object
  * @returns User-friendly error message in Polish
  */
 export function getErrorMessage(error: unknown): string {
   if (error instanceof ValidationError) {
-    return 'Dane są nieprawidłowe. Sprawdź formularz i spróbuj ponownie.';
+    return "Dane są nieprawidłowe. Sprawdź formularz i spróbuj ponownie.";
   }
-  
+
   if (error instanceof UnauthorizedError) {
-    return 'Musisz być zalogowany, aby kontynuować.';
+    return "Musisz być zalogowany, aby kontynuować.";
   }
-  
+
   if (error instanceof ForbiddenError) {
-    return 'Nie masz dostępu do tej fiszki.';
+    return "Nie masz dostępu do tej fiszki.";
   }
-  
+
   if (error instanceof NotFoundError) {
-    return 'Fiszka nie istnieje lub została usunięta.';
+    return "Fiszka nie istnieje lub została usunięta.";
   }
-  
+
   if (error instanceof UnprocessableEntityError) {
-    return 'Nie można przetworzyć żądania. Sprawdź dane i spróbuj ponownie.';
+    return "Nie można przetworzyć żądania. Sprawdź dane i spróbuj ponownie.";
   }
-  
+
   if (error instanceof ServerError) {
-    return 'Wystąpił błąd serwera. Spróbuj ponownie później.';
+    return "Wystąpił błąd serwera. Spróbuj ponownie później.";
   }
-  
+
   if (error instanceof ApiError) {
     return error.message;
   }
-  
+
   if (error instanceof Error) {
     return error.message;
   }
-  
-  return 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie.';
-}
 
+  return "Wystąpił nieoczekiwany błąd. Spróbuj ponownie.";
+}

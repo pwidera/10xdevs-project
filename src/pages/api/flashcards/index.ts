@@ -1,18 +1,18 @@
 /**
  * POST /api/flashcards
  * GET /api/flashcards
- * 
+ *
  * Endpoints for flashcard management:
  * - POST: Create single or batch flashcards (manual or AI-generated)
  * - GET: List flashcards with pagination, filtering, and search
- * 
+ *
  * Features:
  * - Requires JWT authentication
  * - Validates input using Zod schemas
  * - Enforces business rules (origin/session validation)
  * - Transactional batch operations (all-or-nothing)
  * - RLS-protected database access
- * 
+ *
  * POST Request Body (single):
  * {
  *   front_text: string (1-1000 chars),
@@ -20,17 +20,17 @@
  *   origin?: "manual" | "AI_full" | "AI_edited",
  *   generation_session_id?: string (uuid)
  * }
- * 
+ *
  * POST Request Body (batch):
  * [ { ...single flashcard... }, ... ] (1-20 items)
- * 
+ *
  * GET Query Parameters:
  * - page: number (default 1)
  * - page_size: number (1-100, default 20)
  * - q: string (search in front_text and back_text)
  * - origin: "manual" | "AI_full" | "AI_edited"
  * - sort: "created_at_desc" | "created_at_asc" | "last_reviewed_at_asc" | "last_reviewed_at_desc"
- * 
+ *
  * Response Codes:
  * - 200: Success (GET)
  * - 201: Created (POST)
@@ -41,21 +41,16 @@
  * - 500: Internal server error
  */
 
-import type { APIRoute } from 'astro';
-import { z } from 'zod';
+import type { APIRoute } from "astro";
+import { z } from "zod";
 
-import type { CreateFlashcardsResponse, FlashcardsListResponse } from '@/types';
+import type { FlashcardsListResponse } from "@/types";
 import {
   CreateFlashcardSchema,
   CreateFlashcardsBatchSchema,
   FlashcardsListQuerySchema,
-} from '@/lib/validation/flashcards.schema';
-import {
-  createOne,
-  createBatch,
-  list,
-  FlashcardServiceError,
-} from '@/lib/services/flashcard.service';
+} from "@/lib/validation/flashcards.schema";
+import { createOne, createBatch, list, FlashcardServiceError } from "@/lib/services/flashcard.service";
 
 // Disable prerendering for this API route
 export const prerender = false;
@@ -65,7 +60,7 @@ export const prerender = false;
  */
 function json(body: unknown, init?: ResponseInit) {
   return new Response(JSON.stringify(body), {
-    headers: { 'Content-Type': 'application/json' },
+    headers: { "Content-Type": "application/json" },
     ...init,
   });
 }
@@ -81,8 +76,8 @@ export const POST: APIRoute = async (context) => {
   if (!context.locals.user) {
     return json(
       {
-        error: 'Unauthorized',
-        message: 'Authentication required',
+        error: "Unauthorized",
+        message: "Authentication required",
       },
       { status: 401 }
     );
@@ -99,11 +94,11 @@ export const POST: APIRoute = async (context) => {
 
   try {
     requestBody = await context.request.json();
-  } catch (error) {
+  } catch {
     return json(
       {
-        error: 'Invalid JSON',
-        message: 'Request body must be valid JSON',
+        error: "Invalid JSON",
+        message: "Request body must be valid JSON",
       },
       { status: 400 }
     );
@@ -125,8 +120,8 @@ export const POST: APIRoute = async (context) => {
       if (validatedData.length > 20) {
         return json(
           {
-            error: 'Unprocessable Entity',
-            message: 'Batch cannot exceed 20 flashcards',
+            error: "Unprocessable Entity",
+            message: "Batch cannot exceed 20 flashcards",
           },
           { status: 422 }
         );
@@ -150,9 +145,9 @@ export const POST: APIRoute = async (context) => {
     if (error instanceof z.ZodError) {
       return json(
         {
-          error: 'Validation error',
+          error: "Validation error",
           details: error.errors.map((err) => ({
-            field: err.path.join('.'),
+            field: err.path.join("."),
             message: err.message,
           })),
         },
@@ -173,11 +168,11 @@ export const POST: APIRoute = async (context) => {
     }
 
     // Handle unexpected errors
-    console.error('Unexpected error during flashcard creation:', error);
+    console.error("Unexpected error during flashcard creation:", error);
     return json(
       {
-        error: 'Internal server error',
-        message: 'An unexpected error occurred',
+        error: "Internal server error",
+        message: "An unexpected error occurred",
       },
       { status: 500 }
     );
@@ -195,8 +190,8 @@ export const GET: APIRoute = async (context) => {
   if (!context.locals.user) {
     return json(
       {
-        error: 'Unauthorized',
-        message: 'Authentication required',
+        error: "Unauthorized",
+        message: "Authentication required",
       },
       { status: 401 }
     );
@@ -210,11 +205,11 @@ export const GET: APIRoute = async (context) => {
 
   const url = new URL(context.request.url);
   const queryParams = {
-    page: url.searchParams.get('page') || undefined,
-    page_size: url.searchParams.get('page_size') || undefined,
-    q: url.searchParams.get('q') || undefined,
-    origin: url.searchParams.get('origin') || undefined,
-    sort: url.searchParams.get('sort') || undefined,
+    page: url.searchParams.get("page") || undefined,
+    page_size: url.searchParams.get("page_size") || undefined,
+    q: url.searchParams.get("q") || undefined,
+    origin: url.searchParams.get("origin") || undefined,
+    sort: url.searchParams.get("sort") || undefined,
   };
 
   try {
@@ -232,9 +227,9 @@ export const GET: APIRoute = async (context) => {
     if (error instanceof z.ZodError) {
       return json(
         {
-          error: 'Validation error',
+          error: "Validation error",
           details: error.errors.map((err) => ({
-            field: err.path.join('.'),
+            field: err.path.join("."),
             message: err.message,
           })),
         },
@@ -255,14 +250,13 @@ export const GET: APIRoute = async (context) => {
     }
 
     // Handle unexpected errors
-    console.error('Unexpected error during flashcard listing:', error);
+    console.error("Unexpected error during flashcard listing:", error);
     return json(
       {
-        error: 'Internal server error',
-        message: 'An unexpected error occurred',
+        error: "Internal server error",
+        message: "An unexpected error occurred",
       },
       { status: 500 }
     );
   }
 };
-

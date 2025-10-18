@@ -1,6 +1,6 @@
 /**
  * Test Data and Helpers for E2E Tests
- * 
+ *
  * Contains reusable test data, constants, and helper functions.
  */
 
@@ -8,8 +8,8 @@
  * Test user credentials
  */
 export const TEST_CREDENTIALS = {
-  password: 'Playwright123!',
-  emailDomain: 'e2etest.com',
+  password: "Playwright123!",
+  emailDomain: "e2etest.com",
 } as const;
 
 /**
@@ -40,7 +40,7 @@ export const SAMPLE_TEXTS = {
  * @param prefix - Email prefix (default: 'test')
  * @returns Email in format: prefix+timestamp@e2etest.com
  */
-export function generateTestEmail(prefix = 'test'): string {
+export function generateTestEmail(prefix = "test"): string {
   return `${prefix}+${Date.now()}@${TEST_CREDENTIALS.emailDomain}`;
 }
 
@@ -74,26 +74,26 @@ export const FLASHCARD_COUNTS = {
  * Language options
  */
 export const LANGUAGES = {
-  polish: 'pl',
-  english: 'en',
+  polish: "pl",
+  english: "en",
 } as const;
 
 /**
  * Flashcard origin types
  */
 export const FLASHCARD_ORIGINS = {
-  manual: 'manual',
-  aiFull: 'AI_full',
-  aiEdited: 'AI_edited',
+  manual: "manual",
+  aiFull: "AI_full",
+  aiEdited: "AI_edited",
 } as const;
 
 /**
  * Origin labels (Polish)
  */
 export const ORIGIN_LABELS = {
-  [FLASHCARD_ORIGINS.manual]: 'Ręczne',
-  [FLASHCARD_ORIGINS.aiFull]: 'AI',
-  [FLASHCARD_ORIGINS.aiEdited]: 'AI (edytowane)',
+  [FLASHCARD_ORIGINS.manual]: "Ręczne",
+  [FLASHCARD_ORIGINS.aiFull]: "AI",
+  [FLASHCARD_ORIGINS.aiEdited]: "AI (edytowane)",
 } as const;
 
 /**
@@ -111,11 +111,10 @@ export const TIMEOUTS = {
  * Common routes
  */
 export const ROUTES = {
-  home: '/',
-  register: '/auth/register',
-  login: '/auth/login',
-  generate: '/app/generate',
-  flashcards: '/app/flashcard',
-  flashcardsNew: '/app/flashcards/new',
+  home: "/",
+  register: "/auth/register",
+  login: "/auth/login",
+  generate: "/app/generate",
+  flashcards: "/app/flashcard",
+  flashcardsNew: "/app/flashcards/new",
 } as const;
-

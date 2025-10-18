@@ -1,4 +1,4 @@
-import { type Page, type Locator } from '@playwright/test';
+import { type Page, type Locator } from "@playwright/test";
 
 /**
  * Page Object Model for flashcards list page (/app/flashcard)
@@ -6,17 +6,17 @@ import { type Page, type Locator } from '@playwright/test';
  */
 export class FlashcardsPage {
   readonly page: Page;
-  
+
   // Toolbar elements
   readonly searchInput: Locator;
   readonly originFilter: Locator;
   readonly sortSelect: Locator;
-  
+
   // List elements
   readonly flashcardRows: Locator;
   readonly emptyState: Locator;
   readonly loadingSkeleton: Locator;
-  
+
   // Pagination
   readonly paginationInfo: Locator;
   readonly nextPageButton: Locator;
@@ -24,19 +24,19 @@ export class FlashcardsPage {
 
   constructor(page: Page) {
     this.page = page;
-    
+
     // Toolbar selectors (based on FlashcardsToolbar.tsx - to be implemented)
     this.searchInput = page.locator('input[type="search"], input[placeholder*="Szukaj"]');
     this.originFilter = page.locator('select[name="origin"]');
     this.sortSelect = page.locator('select[name="sort"]');
-    
+
     // List selectors (based on FlashcardsList.tsx and FlashcardRow.tsx)
-    this.flashcardRows = page.locator('.rounded-lg.border.bg-card.p-4');
-    this.emptyState = page.locator('text=/Nie znaleziono|Brak fiszek/');
-    this.loadingSkeleton = page.locator('.animate-pulse');
-    
+    this.flashcardRows = page.locator(".rounded-lg.border.bg-card.p-4");
+    this.emptyState = page.locator("text=/Nie znaleziono|Brak fiszek/");
+    this.loadingSkeleton = page.locator(".animate-pulse");
+
     // Pagination selectors
-    this.paginationInfo = page.locator('text=/Strona \\d+ z \\d+/');
+    this.paginationInfo = page.locator("text=/Strona \\d+ z \\d+/");
     this.nextPageButton = page.locator('button:has-text("Następna")');
     this.prevPageButton = page.locator('button:has-text("Poprzednia")');
   }
@@ -45,8 +45,8 @@ export class FlashcardsPage {
    * Navigate to flashcards list page
    */
   async goto() {
-    await this.page.goto('/app/flashcards');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.goto("/app/flashcards");
+    await this.page.waitForLoadState("networkidle");
   }
 
   /**
@@ -54,15 +54,22 @@ export class FlashcardsPage {
    * Waits for loading skeleton to disappear and content to appear
    */
   async waitForFlashcardsLoad() {
-    await this.loadingSkeleton.waitFor({ state: 'detached', timeout: 10000 }).catch(() => {
+    await this.loadingSkeleton.waitFor({ state: "detached", timeout: 10000 }).catch(() => {
       // Skeleton might not appear if data loads quickly
     });
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState("networkidle");
 
     // Wait for either flashcards or empty state to appear
     await Promise.race([
-      this.flashcardRows.first().waitFor({ state: 'visible', timeout: 5000 }).catch(() => {}),
-      this.emptyState.waitFor({ state: 'visible', timeout: 5000 }).catch(() => {})
+      this.flashcardRows
+        .first()
+        .waitFor({ state: "visible", timeout: 5000 })
+        .catch(() => {
+          // Ignore timeout if flashcards don't appear
+        }),
+      this.emptyState.waitFor({ state: "visible", timeout: 5000 }).catch(() => {
+        // Ignore timeout if empty state doesn't appear
+      }),
     ]);
   }
 
@@ -107,7 +114,7 @@ export class FlashcardsPage {
    */
   async getOriginText(index: number): Promise<string> {
     const badge = this.getOriginBadge(index);
-    return (await badge.textContent()) || '';
+    return (await badge.textContent()) || "";
   }
 
   /**
@@ -116,19 +123,19 @@ export class FlashcardsPage {
    */
   async areAllFlashcardsAI(): Promise<boolean> {
     const count = await this.getFlashcardsCount();
-    
+
     if (count === 0) {
       return false;
     }
-    
+
     for (let i = 0; i < count; i++) {
       const originText = await this.getOriginText(i);
       // Check for "AI" or "AI (edytowane)" - both are AI origins
-      if (!originText.includes('AI')) {
+      if (!originText.includes("AI")) {
         return false;
       }
     }
-    
+
     return true;
   }
 
@@ -140,9 +147,9 @@ export class FlashcardsPage {
   async getFrontText(index: number): Promise<string> {
     const row = this.getFlashcardRow(index);
     // Based on FlashcardRow.tsx view mode structure
-    const frontLabel = row.locator('text=/Przód:/');
-    const frontText = frontLabel.locator('..').locator('p');
-    return (await frontText.textContent()) || '';
+    const frontLabel = row.locator("text=/Przód:/");
+    const frontText = frontLabel.locator("..").locator("p");
+    return (await frontText.textContent()) || "";
   }
 
   /**
@@ -153,9 +160,9 @@ export class FlashcardsPage {
   async getBackText(index: number): Promise<string> {
     const row = this.getFlashcardRow(index);
     // Based on FlashcardRow.tsx view mode structure
-    const backLabel = row.locator('text=/Tył:/');
-    const backText = backLabel.locator('..').locator('p');
-    return (await backText.textContent()) || '';
+    const backLabel = row.locator("text=/Tył:/");
+    const backText = backLabel.locator("..").locator("p");
+    return (await backText.textContent()) || "";
   }
 
   /**
@@ -166,25 +173,25 @@ export class FlashcardsPage {
    */
   async editFlashcard(index: number, newFront: string, newBack: string) {
     const row = this.getFlashcardRow(index);
-    
+
     // Click edit button
     const editButton = row.locator('button:has-text("Edytuj")');
     await editButton.click();
-    
+
     // Wait for edit mode
-    const frontTextarea = row.locator('textarea').first();
-    const backTextarea = row.locator('textarea').last();
-    
+    const frontTextarea = row.locator("textarea").first();
+    const backTextarea = row.locator("textarea").last();
+
     // Fill new values
     await frontTextarea.fill(newFront);
     await backTextarea.fill(newBack);
-    
+
     // Save
     const saveButton = row.locator('button:has-text("Zapisz")');
     await saveButton.click();
-    
+
     // Wait for save to complete
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState("networkidle");
   }
 
   /**
@@ -193,17 +200,17 @@ export class FlashcardsPage {
    */
   async deleteFlashcard(index: number) {
     const row = this.getFlashcardRow(index);
-    
+
     // Click delete button
     const deleteButton = row.locator('button:has-text("Usuń")');
     await deleteButton.click();
-    
+
     // Confirm deletion in dialog (based on ConfirmDialog.tsx)
     const confirmButton = this.page.locator('button:has-text("Usuń")').last();
     await confirmButton.click();
-    
+
     // Wait for deletion to complete
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState("networkidle");
   }
 
   /**
@@ -213,7 +220,7 @@ export class FlashcardsPage {
   async filterByOrigin(origin: string) {
     if (await this.originFilter.isVisible()) {
       await this.originFilter.selectOption(origin);
-      await this.page.waitForLoadState('networkidle');
+      await this.page.waitForLoadState("networkidle");
     }
   }
 
@@ -226,8 +233,7 @@ export class FlashcardsPage {
       await this.searchInput.fill(query);
       // Wait for debounce and search to complete
       await this.page.waitForTimeout(500);
-      await this.page.waitForLoadState('networkidle');
+      await this.page.waitForLoadState("networkidle");
     }
   }
 }
-

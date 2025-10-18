@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 /**
  * Hook that debounces a value
- * 
+ *
  * @param value - Value to debounce
  * @param delay - Delay in milliseconds (default: 300)
  * @returns Debounced value
  */
-export function useDebouncedValue<T>(value: T, delay: number = 300): T {
+export function useDebouncedValue<T>(value: T, delay = 300): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
   useEffect(() => {
@@ -22,4 +22,3 @@ export function useDebouncedValue<T>(value: T, delay: number = 300): T {
 
   return debouncedValue;
 }
-

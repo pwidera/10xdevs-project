@@ -1,10 +1,10 @@
-import { useCallback } from 'react';
-import { toast } from 'sonner';
-import { Toaster } from '@/components/ui/sonner';
-import { SourceForm } from './ai-generator/SourceForm';
-import { ProposalsSection } from './ai-generator/ProposalsSection';
-import { useAiGenerator } from './hooks/useAiGenerator';
-import * as aiApi from '@/lib/api/ai-generator.api';
+import { useCallback } from "react";
+import { toast } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
+import { SourceForm } from "./ai-generator/SourceForm";
+import { ProposalsSection } from "./ai-generator/ProposalsSection";
+import { useAiGenerator } from "./hooks/useAiGenerator";
+import * as aiApi from "@/lib/api/ai-generator.api";
 
 export default function GeneratePage() {
   const { state, actions } = useAiGenerator();
@@ -18,9 +18,9 @@ export default function GeneratePage() {
     if (state.acceptedCount > 0) {
       const confirmed = window.confirm(
         `Masz ${state.acceptedCount} niezapisanych zaakceptowanych propozycji. ` +
-        'Wygenerowanie nowych propozycji spowoduje ich utratę. Czy chcesz kontynuować?'
+          "Wygenerowanie nowych propozycji spowoduje ich utratę. Czy chcesz kontynuować?"
       );
-      
+
       if (!confirmed) {
         return;
       }
@@ -45,25 +45,24 @@ export default function GeneratePage() {
         response.proposals
       );
 
-      toast.success('Propozycje wygenerowane!', {
+      toast.success("Propozycje wygenerowane!", {
         description: `Wygenerowano ${response.proposals.length} propozycji fiszek.`,
       });
 
       // Scroll to proposals section
       setTimeout(() => {
-        const proposalsSection = document.querySelector('[data-proposals-section]');
+        const proposalsSection = document.querySelector("[data-proposals-section]");
         if (proposalsSection) {
-          proposalsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          proposalsSection.scrollIntoView({ behavior: "smooth", block: "start" });
         }
       }, 100);
-
     } catch (error) {
-      console.error('Generation error:', error);
-      
+      console.error("Generation error:", error);
+
       const errorMessage = aiApi.getErrorMessage(error);
       actions.generateFailure(errorMessage);
-      
-      toast.error('Błąd generowania', {
+
+      toast.error("Błąd generowania", {
         description: errorMessage,
       });
     }
@@ -75,30 +74,30 @@ export default function GeneratePage() {
 
   const handleSaveSelected = useCallback(async () => {
     if (!state.session) {
-      toast.error('Błąd', {
-        description: 'Brak sesji generowania. Wygeneruj nowe propozycje.',
+      toast.error("Błąd", {
+        description: "Brak sesji generowania. Wygeneruj nowe propozycje.",
       });
       return;
     }
 
     if (state.acceptedCount === 0) {
-      toast.error('Błąd', {
-        description: 'Nie zaakceptowano żadnych propozycji.',
+      toast.error("Błąd", {
+        description: "Nie zaakceptowano żadnych propozycji.",
       });
       return;
     }
 
     // Get accepted proposals
     const acceptedProposals = state.proposals
-      .filter(p => p.status === 'accepted')
-      .map(p => ({
+      .filter((p) => p.status === "accepted")
+      .map((p) => ({
         front_text: p.front_text,
         back_text: p.back_text,
       }));
 
     if (acceptedProposals.length > 20) {
-      toast.error('Błąd', {
-        description: 'Można zapisać maksymalnie 20 fiszek na raz.',
+      toast.error("Błąd", {
+        description: "Można zapisać maksymalnie 20 fiszek na raz.",
       });
       return;
     }
@@ -113,20 +112,18 @@ export default function GeneratePage() {
 
       actions.saveSuccess();
 
-      toast.success('Fiszki zapisane!', {
+      toast.success("Fiszki zapisane!", {
         description: `Zapisano ${response.saved_count} ${
-          response.saved_count === 1 ? 'fiszkę' : 
-          response.saved_count < 5 ? 'fiszki' : 'fiszek'
+          response.saved_count === 1 ? "fiszkę" : response.saved_count < 5 ? "fiszki" : "fiszek"
         }.`,
       });
-
     } catch (error) {
-      console.error('Save error:', error);
-      
+      console.error("Save error:", error);
+
       const errorMessage = aiApi.getErrorMessage(error);
       actions.saveFailure(errorMessage);
-      
-      toast.error('Błąd zapisu', {
+
+      toast.error("Błąd zapisu", {
         description: errorMessage,
       });
     }
@@ -191,4 +188,3 @@ export default function GeneratePage() {
     </div>
   );
 }
-
