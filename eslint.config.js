@@ -1,7 +1,6 @@
 import { includeIgnoreFile } from "@eslint/compat";
 import eslint from "@eslint/js";
 import eslintPluginPrettier from "eslint-plugin-prettier/recommended";
-import eslintPluginAstro from "eslint-plugin-astro";
 import jsxA11y from "eslint-plugin-jsx-a11y";
 import pluginReact from "eslint-plugin-react";
 import reactCompiler from "eslint-plugin-react-compiler";
@@ -59,17 +58,10 @@ const reactConfig = tseslint.config({
 export default tseslint.config(
   includeIgnoreFile(gitignorePath),
   {
-    ignores: ["src/db/database.types.ts"],
+    ignores: ["src/db/database.types.ts", "**/*.astro"],
   },
   baseConfig,
   jsxA11yConfig,
   reactConfig,
-  eslintPluginAstro.configs["flat/recommended"],
-  eslintPluginPrettier,
-  {
-    files: ["**/*.astro"],
-    rules: {
-      "prettier/prettier": "off",
-    },
-  }
+  eslintPluginPrettier
 );

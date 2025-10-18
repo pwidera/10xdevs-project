@@ -69,10 +69,10 @@
     "vitest": "^3.2.4"
   },
   "lint-staged": {
-    "*.{ts,tsx,astro}": [
+    "*.{ts,tsx}": [
       "eslint --fix"
     ],
-    "*.{json,css,md}": [
+    "*.{json,css,md,astro}": [
       "prettier --write"
     ]
   }
