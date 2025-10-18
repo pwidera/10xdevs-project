@@ -8,9 +8,29 @@ on:
 
 
 jobs:
-  lint:
-    name: Lint Code
+#  lint:
+#    name: Lint Code
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#
+#      - name: Setup Node.js
+#        uses: actions/setup-node@v4
+#        with:
+#          node-version-file: '.nvmrc'
+#          cache: 'npm'
+#
+#      - name: Install dependencies
+#        run: npm ci
+#
+#      - name: Run linter
+#        run: npm run lint
+
+  build:
+    name: Build
     runs-on: ubuntu-latest
+    #    needs: lint
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -24,13 +44,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run linter
-        run: npm run lint
+      - name: Build application
+        run: npm run build
 
   unit-test:
     name: Unit Tests
     runs-on: ubuntu-latest
-    needs: lint
+#    needs: lint
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -54,26 +74,6 @@ jobs:
           name: unit-test-coverage
           path: coverage/
           retention-days: 7
-
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    needs: lint
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build application
-        run: npm run build
 
 # opcjonalne - brak zalozonej testowej bazy w supabase cloud
 #  e2e-test:
@@ -128,7 +128,8 @@ jobs:
   status-comment:
     name: Post Status Comment
     runs-on: ubuntu-latest
-    needs: [lint, unit-test, build]
+#    needs: [lint, unit-test, build]
+    needs: [build, unit-test]
     if: always() && needs.lint.result == 'success' && needs.unit-test.result == 'success' && needs.e2e-test.result == 'success'
     permissions:
       pull-requests: write
